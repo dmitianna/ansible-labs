@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Server: nginx/1.24.0 (Ubuntu)
+Date: Wed, 25 Mar 2026 16:21:40 GMT
+Content-Type: text/html
+Content-Length: 219
+Last-Modified: Wed, 25 Mar 2026 13:02:04 GMT
+Connection: keep-alive
+ETag: "69c3dccc-db"
+X-Frame-Options: SAMEORIGIN
+X-Custom-Header: TestAnsiblePlaybook
+Accept-Ranges: bytes
+

@@ -1,1 +1,26 @@
 
+PLAY [Install nginx] ***********************************************************
+
+TASK [Install nginx] ***********************************************************
+ok: [target2]
+
+TASK [Create index.html] *******************************************************
+ok: [target2]
+
+TASK [Create nginx config] *****************************************************
+ok: [target2]
+
+TASK [Test nginx configuration] ************************************************
+ok: [target2]
+
+TASK [Show nginx test result] **************************************************
+ok: [target2] => {
+    "msg": [
+        "nginx: the configuration file /etc/nginx/nginx.conf syntax is ok",
+        "nginx: configuration file /etc/nginx/nginx.conf test is successful"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+target2                    : ok=5    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
