@@ -1,2 +1,8 @@
-# ansible-labs
-Ansible homework labs
+# Ansible Labs
+
+Этот репозиторий для экспериментов по Ansible.
+
+## Содержание
+
+- [Лабораторная работа №1](./laba01) - Получение фактов через модуль setup
+
