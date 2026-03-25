@@ -1,0 +1,79 @@
+
+PLAY [Collecting info about hosts] *********************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+ok: [target2]
+ok: [target1]
+
+TASK [Calctulating time in minutes,days,hours] *********************************
+ok: [target1]
+ok: [target2]
+ok: [localhost]
+
+TASK [Formating a string] ******************************************************
+ok: [target1]
+ok: [target2]
+ok: [localhost]
+
+TASK [Print formatted info] ****************************************************
+ok: [target1] => {
+    "msg": [
+        "Информация о ПК",
+        "───────────────────────────────",
+        "Хост:         target1",
+        "FQDN:         vTestPC002.home.local",
+        "Версия:       24.04",
+        "Конфиг:       /home/nancy/ansible-labs/laba02/part1/ansible.cfg",
+        "Дата/время:   2026-03-25T16:33:42Z (CET)",
+        "Пользователь: user",
+        "Версия ОС:    Ubuntu 24.04",
+        "Семейство ОС: Debian",
+        "RAM:          1966 МБ",
+        "ip адрес:     ['10.0.47.20']",
+        "Время работы: 0 дней 07 часов 22 минут",
+        "───────────────────────────────"
+    ]
+}
+ok: [localhost] => {
+    "msg": [
+        "Информация о ПК",
+        "───────────────────────────────",
+        "Хост:         localhost",
+        "FQDN:         vTestPC001.home.local",
+        "Версия:       24.04",
+        "Конфиг:       /home/nancy/ansible-labs/laba02/part1/ansible.cfg",
+        "Дата/время:   2026-03-25T16:33:31Z (CET)",
+        "Пользователь: nancy",
+        "Версия ОС:    Ubuntu 24.04",
+        "Семейство ОС: Debian",
+        "RAM:          3914 МБ",
+        "ip адрес:     ['10.0.47.10']",
+        "Время работы: 0 дней 05 часов 54 минут",
+        "───────────────────────────────"
+    ]
+}
+ok: [target2] => {
+    "msg": [
+        "Информация о ПК",
+        "───────────────────────────────",
+        "Хост:         target2",
+        "FQDN:         vTestPC003.home.local",
+        "Версия:       24.04",
+        "Конфиг:       /home/nancy/ansible-labs/laba02/part1/ansible.cfg",
+        "Дата/время:   2026-03-25T16:33:31Z (UTC)",
+        "Пользователь: user",
+        "Версия ОС:    Ubuntu 24.04",
+        "Семейство ОС: Debian",
+        "RAM:          1966 МБ",
+        "ip адрес:     ['10.0.47.30']",
+        "Время работы: 0 дней 03 часов 22 минут",
+        "───────────────────────────────"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+target1                    : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+target2                    : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

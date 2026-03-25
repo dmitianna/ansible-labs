@@ -1,0 +1,36 @@
+- name: Collecting info about hosts
+  hosts: all
+  gather_facts: yes
+  vars:
+    info_header: "Информация о ПК"
+    info_separator: "───────────────────────────────"
+    timezone: "{{ ansible_date_time.tz }}"
+
+  tasks:
+    - name: Calctulating time in minutes,days,hours
+      ansible.builtin.set_fact:
+        uptime_days: "{{ (ansible_uptime_seconds // 86400) | int }}"
+        uptime_hours: "{{ ((ansible_uptime_seconds % 86400) // 3600) | int }}"
+        uptime_minutes: "{{ ((ansible_uptime_seconds % 3600) // 60) | int }}"
+
+    - name: Formating a string
+      ansible.builtin.set_fact:
+        uptime_string: "{{ uptime_days | int }} дней {{ '%02d' | format(uptime_hours | int) }} часов {{ '%02d' | format(uptime_minutes | int) }} минут"
+
+    - name: Print formatted info
+      ansible.builtin.debug:
+        msg:
+          - "{{ info_header }}"
+          - "{{ info_separator }}"
+          - "Хост:         {{ inventory_hostname }}"
+          - "FQDN:         {{ ansible_fqdn | default('Не определен') }}"
+          - "Версия:       {{ ansible_distribution_version | default('Не определено') }}"
+          - "Конфиг:       {{ ansible_config_file | default('Не определен') }}"
+          - "Дата/время:   {{ ansible_date_time.iso8601 }} ({{ timezone }})"
+          - "Пользователь: {{ ansible_user_id | default('Не определен') }}"
+          - "Версия ОС:    {{ ansible_distribution | default('Не определено') }} {{ ansible_distribution_version | default('') }}"
+          - "Семейство ОС: {{ ansible_os_family | default('Не определено') }}"
+          - "RAM:          {{ ansible_memtotal_mb | default('Не определено') }} МБ"
+          - "ip адрес:     {{ ansible_all_ipv4_addresses | default([]) }}"
+          - "Время работы: {{ uptime_string }}"
+          - "{{ info_separator }}"
