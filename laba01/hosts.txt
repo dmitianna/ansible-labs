@@ -1,0 +1,6 @@
+[test]
+10.0.47.20 ansible_user=user
+10.0.47.30 ansible_user=user
+
+[local]
+localhost ansible_connection=local

@@ -1,0 +1,42 @@
+localhost | SUCCESS => {
+    "ansible_facts": {
+        "ansible_all_ipv4_addresses": [
+            "10.0.47.10"
+        ],
+        "ansible_board_name": "VirtualBox",
+        "ansible_board_vendor": "Oracle Corporation",
+        "ansible_fqdn": "vTestPC001.home.local",
+        "ansible_os_family": "Debian",
+        "ansible_uptime_seconds": 5071,
+        "ansible_user_id": "nancy"
+    },
+    "changed": false
+}
+10.0.47.30 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_all_ipv4_addresses": [
+            "10.0.47.30"
+        ],
+        "ansible_board_name": "VirtualBox",
+        "ansible_board_vendor": "Oracle Corporation",
+        "ansible_fqdn": "vTestPC003.home.local",
+        "ansible_os_family": "Debian",
+        "ansible_uptime_seconds": 7344,
+        "ansible_user_id": "user"
+    },
+    "changed": false
+}
+10.0.47.20 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_all_ipv4_addresses": [
+            "10.0.47.20"
+        ],
+        "ansible_board_name": "VirtualBox",
+        "ansible_board_vendor": "Oracle Corporation",
+        "ansible_fqdn": "vTestPC002.home.local",
+        "ansible_os_family": "Debian",
+        "ansible_uptime_seconds": 10249,
+        "ansible_user_id": "user"
+    },
+    "changed": false
+}

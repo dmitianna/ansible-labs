@@ -1,0 +1,1 @@
+ ansible all -i hosts.txt -m setup -a 'filter=ansible_all_ipv4_addresses,ansible_board_name,ansible_board_vendor,ansible_fqdn,ansible_os_family,ansible_uptime_seconds,ansible_user_id' > facts_hosts.txt
