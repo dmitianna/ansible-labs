@@ -1,0 +1,60 @@
+---
+- name: Setup and verify TMOUT
+  hosts: targets
+  become: yes
+  gather_facts: no
+  vars:
+    tmout_value: 900
+    config: /etc/profile
+
+  tasks:
+    - name: Check TMOUT value
+      shell: grep -E "^\s*TMOUT\s*=\s*{{ tmout_value }}\s*$" {{ config }}
+      register: tmout_check
+      changed_when: false
+      failed_when: false
+
+    - name: Check readonly TMOUT
+      shell: grep -E "^\s*readonly\s+TMOUT\s*$" {{ config }}
+      register: readonly_check
+      changed_when: false
+      failed_when: false
+
+    - name: Case 1 - Everything correct
+      debug:
+        msg: "TMOUT already correct ({{ tmout_value }} seconds)"
+      when: tmout_check.rc == 0 and readonly_check.rc == 0
+
+    - name: Case 2 - Wrong TMOUT value
+      debug:
+        msg: "TMOUT has wrong value"
+      when: tmout_check.rc != 0
+
+    - name: Case 3 - Missing readonly
+      debug:
+        msg: "readonly TMOUT missing"
+      when: readonly_check.rc != 0
+
+    - name: Fix TMOUT value
+      lineinfile:
+        path: "{{ config }}"
+        regexp: '^\s*TMOUT\s*='
+        line: "TMOUT={{ tmout_value }}"
+      when: tmout_check.rc != 0
+
+    - name: Fix readonly TMOUT
+      lineinfile:
+        path: "{{ config }}"
+        line: "readonly TMOUT"
+        insertafter: EOF
+      when: readonly_check.rc != 0
+
+    - name: Verify final
+      shell: |
+        grep -q "^TMOUT={{ tmout_value }}$" {{ config }} && \
+        grep -q "^readonly TMOUT$" {{ config }}
+      changed_when: false
+
+    - name: Success
+      debug:
+        msg: "TMOUT = {{ tmout_value }} seconds ({{ tmout_value // 60 }} minutes)"

@@ -1,0 +1,37 @@
+
+PLAY [Setup and verify TMOUT] **************************************************
+
+TASK [Check if TMOUT is correctly configured] **********************************
+ok: [target1]
+ok: [target2]
+
+TASK [Remove all old TMOUT settings] *******************************************
+skipping: [target1]
+skipping: [target2]
+
+TASK [Add TMOUT to /etc/profile] ***********************************************
+skipping: [target1]
+skipping: [target2]
+
+TASK [Add readonly TMOUT to /etc/profile] **************************************
+skipping: [target1]
+skipping: [target2]
+
+TASK [Final result] ************************************************************
+ok: [target1] => {
+    "msg": [
+        "TMOUT = 900 seconds (15 minutes)",
+        " Already configured correctly"
+    ]
+}
+ok: [target2] => {
+    "msg": [
+        "TMOUT = 900 seconds (15 minutes)",
+        " Already configured correctly"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+target1                    : ok=2    changed=0    unreachable=0    failed=0    skipped=3    rescued=0    ignored=0   
+target2                    : ok=2    changed=0    unreachable=0    failed=0    skipped=3    rescued=0    ignored=0   
+
