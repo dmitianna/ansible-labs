@@ -1,0 +1,95 @@
+
+PLAY [Проверка настроек подключения к AD] **************************************
+
+TASK [Проверка наличия /etc/krb5.conf] *****************************************
+ok: [target1]
+ok: [target2]
+
+TASK [Проверка наличия /etc/sssd/sssd.conf] ************************************
+ok: [target1]
+ok: [target2]
+
+TASK [Ошибка - отсутствует /etc/krb5.conf] *************************************
+skipping: [target1]
+skipping: [target2]
+
+TASK [Ошибка - отсутствует /etc/sssd/sssd.conf] ********************************
+skipping: [target1]
+skipping: [target2]
+
+TASK [Проверка default_etypes] *************************************************
+ok: [target1]
+ok: [target2]
+
+TASK [Проверка default_as_etypes] **********************************************
+ok: [target1]
+ok: [target2]
+
+TASK [Проверка default_tgs_etypes] *********************************************
+ok: [target1]
+ok: [target2]
+
+TASK [Проверка cache_credentials = False] **************************************
+ok: [target2]
+ok: [target1]
+
+TASK [Проверка fallback_homedir с %d] ******************************************
+ok: [target1]
+ok: [target2]
+
+TASK [Результаты проверки Kerberos] ********************************************
+ok: [target1] => {
+    "msg": [
+        "default_etypes: OK",
+        "default_as_etypes: OK",
+        "default_tgs_etypes: OK"
+    ]
+}
+ok: [target2] => {
+    "msg": [
+        "default_etypes: OK",
+        "default_as_etypes: OK",
+        "default_tgs_etypes: OK"
+    ]
+}
+
+TASK [Результаты проверки SSSD] ************************************************
+ok: [target1] => {
+    "msg": [
+        "cache_credentials = False: OK",
+        "fallback_homedir (с %d): OK"
+    ]
+}
+ok: [target2] => {
+    "msg": [
+        "cache_credentials = False: OK",
+        "fallback_homedir (с %d): OK"
+    ]
+}
+
+TASK [Общий статус Kerberos] ***************************************************
+ok: [target1]
+ok: [target2]
+
+TASK [Общий статус SSSD] *******************************************************
+ok: [target1]
+ok: [target2]
+
+TASK [ИТОГОВЫЙ РЕЗУЛЬТАТ] ******************************************************
+ok: [target1] => {
+    "msg": [
+        "Kerberos: OK",
+        "SSSD: OK"
+    ]
+}
+ok: [target2] => {
+    "msg": [
+        "Kerberos: OK",
+        "SSSD: OK"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+target1                    : ok=12   changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+target2                    : ok=12   changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+

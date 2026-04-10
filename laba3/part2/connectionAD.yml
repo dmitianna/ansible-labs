@@ -1,0 +1,91 @@
+---
+- name: Проверка настроек подключения к AD
+  hosts: targets
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: Проверка наличия /etc/krb5.conf
+      stat:
+        path: /etc/krb5.conf
+      register: krb5_stat
+
+    - name: Проверка наличия /etc/sssd/sssd.conf
+      stat:
+        path: /etc/sssd/sssd.conf
+      register: sssd_stat
+
+    - name: Ошибка - отсутствует /etc/krb5.conf
+      fail:
+        msg: "Файл /etc/krb5.conf не найден"
+      when: not krb5_stat.stat.exists
+
+    - name: Ошибка - отсутствует /etc/sssd/sssd.conf
+      fail:
+        msg: "Файл /etc/sssd/sssd.conf не найден"
+      when: not sssd_stat.stat.exists
+
+    - name: Проверка default_etypes
+      shell: |
+        grep -qE "^\s*default_etypes\s*=\s*aes128-cts-hmac-sha1-96,\s*aes256-cts-hmac-sha1-96\s*$" /etc/krb5.conf || \
+        grep -qE "^\s*default_etypes\s*=\s*aes256-cts-hmac-sha1-96,\s*aes128-cts-hmac-sha1-96\s*$" /etc/krb5.conf
+      register: default_etypes_check
+      failed_when: false
+      changed_when: false
+
+    - name: Проверка default_as_etypes
+      shell: |
+        grep -qE "^\s*default_as_etypes\s*=\s*aes128-cts-hmac-sha1-96,\s*aes256-cts-hmac-sha1-96\s*$" /etc/krb5.conf || \
+        grep -qE "^\s*default_as_etypes\s*=\s*aes256-cts-hmac-sha1-96,\s*aes128-cts-hmac-sha1-96\s*$" /etc/krb5.conf
+      register: default_as_etypes_check
+      failed_when: false
+      changed_when: false
+
+    - name: Проверка default_tgs_etypes
+      shell: |
+        grep -qE "^\s*default_tgs_etypes\s*=\s*aes128-cts-hmac-sha1-96,\s*aes256-cts-hmac-sha1-96\s*$" /etc/krb5.conf || \
+        grep -qE "^\s*default_tgs_etypes\s*=\s*aes256-cts-hmac-sha1-96,\s*aes128-cts-hmac-sha1-96\s*$" /etc/krb5.conf
+      register: default_tgs_etypes_check
+      failed_when: false
+      changed_when: false
+
+    - name: Проверка cache_credentials = False
+      shell: |
+        grep -E "^\s*cache_credentials\s*=\s*False" /etc/sssd/sssd.conf
+      register: cache_credentials_check
+      failed_when: false
+      changed_when: false
+
+    - name: Проверка fallback_homedir с %d
+      shell: |
+        (grep -h "fallback_homedir" /etc/sssd/sssd.conf /etc/sssd/conf.d/*.conf 2>/dev/null) | grep -q "%d"
+      register: fallback_homedir_check
+      failed_when: false
+      changed_when: false
+
+    - name: Результаты проверки Kerberos
+      debug:
+        msg:
+          - "default_etypes: {{ 'OK' if default_etypes_check.rc == 0 else ' НЕ НАЙДЕН' }}"
+          - "default_as_etypes: {{ 'OK' if default_as_etypes_check.rc == 0 else ' НЕ НАЙДЕН' }}"
+          - "default_tgs_etypes: {{ 'OK' if default_tgs_etypes_check.rc == 0 else ' НЕ НАЙДЕН' }}"
+
+    - name: Результаты проверки SSSD
+      debug:
+        msg:
+          - "cache_credentials = False: {{ 'OK' if cache_credentials_check.rc == 0 else 'НЕ НАЙДЕН' }}"
+          - "fallback_homedir (с %d): {{ 'OK' if fallback_homedir_check.rc == 0 else 'НЕ НАЙДЕН' }}"
+
+    - name: Общий статус Kerberos
+      set_fact:
+        kerberos_ok: "{{ default_etypes_check.rc == 0 and default_as_etypes_check.rc == 0 and default_tgs_etypes_check.rc == 0 }}"
+
+    - name: Общий статус SSSD
+      set_fact:
+        sssd_ok: "{{ cache_credentials_check.rc == 0 and fallback_homedir_check.rc == 0 }}"
+
+    - name: ИТОГОВЫЙ РЕЗУЛЬТАТ
+      debug:
+        msg:
+          - "Kerberos: {{ 'OK' if kerberos_ok else 'Обнаружены несоответствия. Требуется настройка' }}"
+          - "SSSD: {{ 'OK' if sssd_ok else 'Обнаружены несоответствия. Требуется настройка' }}"
