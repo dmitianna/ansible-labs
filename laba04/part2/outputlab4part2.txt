@@ -1,0 +1,33 @@
+
+PLAY [Проверка модулей неиспользуемых файловых систем] *************************
+
+TASK [Проверка статуса модулей] ************************************************
+ok: [target2]
+ok: [target1]
+
+TASK [Результат проверки] ******************************************************
+ok: [target1] => {
+    "msg": [
+        "cramfs - ОТКЛЮЧЕН",
+        "freevxfs - ОТКЛЮЧЕН",
+        "jffs2 - ОТКЛЮЧЕН",
+        "hfs - ОТКЛЮЧЕН",
+        "hfsplus - ОТКЛЮЧЕН",
+        "squashfs - ОТКЛЮЧЕН"
+    ]
+}
+ok: [target2] => {
+    "msg": [
+        "cramfs - ОТКЛЮЧЕН",
+        "freevxfs - ОТКЛЮЧЕН",
+        "jffs2 - ОТКЛЮЧЕН",
+        "hfs - ОТКЛЮЧЕН",
+        "hfsplus - ОТКЛЮЧЕН",
+        "squashfs - ОТКЛЮЧЕН"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+target1                    : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+target2                    : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
