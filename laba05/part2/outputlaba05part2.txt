@@ -1,0 +1,43 @@
+
+PLAY [Настройка параметров безопасности ядра] **********************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [target2]
+ok: [target1]
+
+TASK [Отключение системного вызова kexec_load] *********************************
+changed: [target1]
+changed: [target2]
+
+TASK [Ограничение использования пространств имен пользователей] ****************
+changed: [target1]
+changed: [target2]
+
+TASK [Запрет системного вызова bpf для непривилегированных пользователей] ******
+changed: [target1]
+changed: [target2]
+
+TASK [Проверка применения параметров] ******************************************
+ok: [target1]
+ok: [target2]
+
+TASK [Результат проверки] ******************************************************
+ok: [target1] => {
+    "msg": [
+        "kernel.kexec_load_disabled = 1",
+        "user.max_user_namespaces = 0",
+        "kernel.unprivileged_bpf_disabled = 1"
+    ]
+}
+ok: [target2] => {
+    "msg": [
+        "kernel.kexec_load_disabled = 1",
+        "user.max_user_namespaces = 0",
+        "kernel.unprivileged_bpf_disabled = 1"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+target1                    : ok=6    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+target2                    : ok=6    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

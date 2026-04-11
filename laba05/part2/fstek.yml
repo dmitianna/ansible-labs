@@ -1,0 +1,39 @@
+---
+- name: Настройка параметров безопасности ядра
+  hosts: targets
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Отключение системного вызова kexec_load
+      sysctl:
+        name: kernel.kexec_load_disabled
+        value: '1'
+        state: present
+        reload: yes
+
+    - name: Ограничение использования пространств имен пользователей
+      sysctl:
+        name: user.max_user_namespaces
+        value: '0'
+        state: present
+        reload: yes
+
+    - name: Запрет системного вызова bpf для непривилегированных пользователей
+      sysctl:
+        name: kernel.unprivileged_bpf_disabled
+        value: '1'
+        state: present
+        reload: yes
+
+    - name: Проверка применения параметров
+      command: sysctl -n kernel.kexec_load_disabled user.max_user_namespaces kernel.unprivileged_bpf_disabled
+      register: check_result
+      changed_when: false
+
+    - name: Результат проверки
+      debug:
+        msg:
+          - "kernel.kexec_load_disabled = {{ check_result.stdout_lines[0] }}"
+          - "user.max_user_namespaces = {{ check_result.stdout_lines[1] }}"
+          - "kernel.unprivileged_bpf_disabled = {{ check_result.stdout_lines[2] }}"
