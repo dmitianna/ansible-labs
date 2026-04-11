@@ -1,0 +1,61 @@
+
+PLAY [Проверка неактивных служб] ***********************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [target2]
+ok: [target1]
+
+TASK [Сбор фактов о службах] ***************************************************
+ok: [target2]
+ok: [target1]
+
+TASK [Поиск запущенных служб] **************************************************
+skipping: [target1] => (item=autofs) 
+skipping: [target1] => (item=avahi-daemon) 
+skipping: [target1] => (item=dhcpd) 
+skipping: [target1] => (item=named) 
+skipping: [target1] => (item=vsftpd) 
+skipping: [target1] => (item=slapd) 
+skipping: [target1] => (item=nfs-server) 
+skipping: [target2] => (item=autofs) 
+skipping: [target1] => (item=nis) 
+skipping: [target2] => (item=avahi-daemon) 
+skipping: [target1] => (item=cups) 
+skipping: [target2] => (item=dhcpd) 
+skipping: [target1] => (item=smbd) 
+skipping: [target1] => (item=snmpd) 
+skipping: [target2] => (item=named) 
+skipping: [target1] => (item=tftpd) 
+skipping: [target2] => (item=vsftpd) 
+skipping: [target1] => (item=httpd) 
+skipping: [target2] => (item=slapd) 
+skipping: [target1] => (item=xinetd) 
+skipping: [target1] => (item=postfix) 
+skipping: [target2] => (item=nfs-server) 
+skipping: [target1]
+skipping: [target2] => (item=nis) 
+skipping: [target2] => (item=cups) 
+skipping: [target2] => (item=smbd) 
+skipping: [target2] => (item=snmpd) 
+skipping: [target2] => (item=tftpd) 
+skipping: [target2] => (item=httpd) 
+skipping: [target2] => (item=xinetd) 
+skipping: [target2] => (item=postfix) 
+skipping: [target2]
+
+TASK [Результат проверки] ******************************************************
+ok: [target1] => {
+    "msg": "Все службы неактивны"
+}
+ok: [target2] => {
+    "msg": "Все службы неактивны"
+}
+
+TASK [Список активных служб] ***************************************************
+skipping: [target1]
+skipping: [target2]
+
+PLAY RECAP *********************************************************************
+target1                    : ok=3    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+target2                    : ok=3    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+

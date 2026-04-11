@@ -1,0 +1,44 @@
+---
+- name: Проверка неактивных служб
+  hosts: targets
+  become: yes
+  gather_facts: yes
+
+  vars:
+    list_services:
+      - autofs
+      - avahi-daemon
+      - dhcpd
+      - named
+      - vsftpd
+      - slapd
+      - nfs-server
+      - nis
+      - cups
+      - smbd
+      - snmpd
+      - tftpd
+      - httpd
+      - xinetd
+      - postfix
+  tasks:
+    - name: Сбор фактов о службах
+      service_facts:
+
+    - name: Поиск запущенных служб
+      set_fact:
+        active: "{{ active | default([]) + [item] }}"
+      loop: "{{ list_services }}"
+      when: 
+        - item in ansible_facts.services
+        - ansible_facts.services[item].get('state', '') == 'running'
+
+    - name: Результат проверки
+      debug:
+        msg: "Все службы неактивны"
+      when: active | default([]) | length == 0
+
+    - name: Список активных служб
+      debug:
+        msg: "Активные службы: {{ active | join(', ') }}"
+      when: active | default([]) | length > 0
