@@ -1,0 +1,54 @@
+---
+- name: Установка и настройка auditd
+  hosts: local
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: Установка auditd
+      apt:
+        name:
+          - auditd
+          - audispd-plugins
+        state: present
+
+    - name: Создание правил аудита
+      copy:
+        content: |
+          # Rules added by Ansible
+          -a always,exit -F arch=b64 -S execve -F uid=0 -k privileged_command
+          -a always,exit -F arch=b32 -S execve -F uid=0 -k privileged_command
+          -w /etc/ssh/sshd_config -p wa -k sshd_config_change
+          -a always,exit -F arch=b64 -S chmod -k file_permission_change
+          -a always,exit -F arch=b32 -S chmod -k file_permission_change
+          -a always,exit -F arch=b64 -S chown -k file_permission_change
+          -a always,exit -F arch=b32 -S chown -k file_permission_change
+          -e 2
+        dest: /etc/audit/rules.d/90-ansiblelab.rules
+        mode: '0640'
+        owner: root
+        group: root
+      notify: restart auditd
+
+    - name: Защита директории с логами
+      file:
+        path: /var/log/audit
+        owner: root
+        group: root
+        mode: '0600'
+        recurse: yes
+
+    - name: Включение и запуск auditd
+      systemd:
+        name: auditd
+        enabled: yes
+        state: started
+
+    - name: Сохранение отчета
+      shell: auditctl -l > ~/report1.txt
+
+  handlers:
+    - name: restart auditd
+      systemd:
+        name: auditd
+        state: restarted

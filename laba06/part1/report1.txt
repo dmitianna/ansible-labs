@@ -1,0 +1,7 @@
+-a always,exit -F arch=b64 -S execve -F uid=0 -F key=privileged_command
+-a always,exit -F arch=b32 -S execve -F uid=0 -F key=privileged_command
+-w /etc/ssh/sshd_config -p wa -k sshd_config_change
+-a always,exit -F arch=b64 -S chmod -F key=file_permission_change
+-a always,exit -F arch=b32 -S chmod -F key=file_permission_change
+-a always,exit -F arch=b64 -S chown -F key=file_permission_change
+-a always,exit -F arch=b32 -S chown -F key=file_permission_change
