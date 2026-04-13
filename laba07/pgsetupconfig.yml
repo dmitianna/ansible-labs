@@ -1,0 +1,160 @@
+---
+- name: Установка и настройка PostgreSQL
+  hosts: local
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: Установка PostgreSQL
+      apt:
+        name:
+          - postgresql
+          - postgresql-contrib
+        state: present
+
+    - name: Установка psycopg2
+      apt:
+        name: python3-psycopg2
+        state: present
+
+    - name: Запуск PostgreSQL
+      systemd:
+        name: postgresql
+        state: started
+        enabled: yes
+
+    - name: Ожидание запуска PostgreSQL
+      wait_for:
+        port: 5432
+        delay: 3
+        timeout: 30
+
+    - name: Изменение порта на 5452
+      shell: |
+        sudo -u postgres psql -p 5432 -c "ALTER SYSTEM SET port = 5452;"
+
+    - name: Перезапуск PostgreSQL
+      systemd:
+        name: postgresql
+        state: restarted
+
+    - name: Ожидание запуска PostgreSQL на порту 5452
+      wait_for:
+        port: 5452
+        delay: 5
+        timeout: 60
+
+    - name: Создание базы данных secure_db
+      postgresql_db:
+        name: secure_db
+        state: present
+        port: 5452
+      become_user: postgres
+
+    - name: Отзыв прав PUBLIC
+      postgresql_query:
+        db: secure_db
+        query: "REVOKE CREATE ON SCHEMA public FROM PUBLIC;"
+        autocommit: yes
+        port: 5452
+      become_user: postgres
+
+    - name: Создание роли readers
+      postgresql_user:
+        name: readers
+        role_attr_flags: NOLOGIN
+        state: present
+        port: 5452
+      become_user: postgres
+
+    - name: Права SELECT для readers
+      postgresql_query:
+        db: secure_db
+        query: "GRANT SELECT ON ALL TABLES IN SCHEMA public TO readers;"
+        autocommit: yes
+        port: 5452
+      become_user: postgres
+
+    - name: Права по умолчанию
+      postgresql_query:
+        db: secure_db
+        query: "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO readers;"
+        autocommit: yes
+        port: 5452
+      become_user: postgres
+
+    - name: Создание пользователя user01
+      postgresql_user:
+        name: user01
+        password: "SecurePass123"
+        role_attr_flags: LOGIN
+        state: present
+        port: 5452
+      become_user: postgres
+
+    - name: Добавление user01 в группу readers
+      postgresql_query:
+        db: postgres
+        query: "GRANT readers TO user01;"
+        autocommit: yes
+        port: 5452
+      become_user: postgres
+
+    - name: Проверка порта
+      shell: |
+        sudo -u postgres psql -p 5452 -t -c "SHOW port;" | xargs
+      register: port_check
+      changed_when: false
+
+    - name: Проверка наличия базы данных secure_db
+      shell: |
+        sudo -u postgres psql -p 5452 -l -t | grep -q secure_db
+      register: db_check
+      changed_when: false
+      failed_when: false
+
+    - name: Проверка наличия роли readers
+      shell: |
+        sudo -u postgres psql -p 5452 -t -c "SELECT rolname FROM pg_roles WHERE rolname='readers';" | xargs
+      register: readers_check
+      changed_when: false
+      failed_when: false
+
+    - name: Проверка наличия пользователя user01
+      shell: |
+        sudo -u postgres psql -p 5452 -t -c "SELECT rolname FROM pg_roles WHERE rolname='user01';" | xargs
+      register: user_check
+      changed_when: false
+      failed_when: false
+
+    - name: Проверка что user01 в группе readers
+      shell: |
+        sudo -u postgres psql -p 5452 -t -c "SELECT 1 FROM pg_auth_members WHERE member = (SELECT oid FROM pg_roles WHERE rolname='user01') AND roleid = (SELECT oid FROM pg_roles WHERE rolname='readers');" | xargs
+      register: member_check
+      changed_when: false
+      failed_when: false
+
+    - name: Проверка прав SELECT для readers
+      shell: |
+        sudo -u postgres psql -p 5452 -d secure_db -t -c "SELECT 1 FROM information_schema.table_privileges WHERE grantee='readers' AND privilege_type='SELECT' LIMIT 1;" | xargs
+      register: grant_check
+      changed_when: false
+      failed_when: false
+
+    - name: Проверка что права PUBLIC на CREATE отозваны
+      shell: |
+        sudo -u postgres psql -p 5452 -d secure_db -t -c "SELECT 1 FROM information_schema.role_routine_grants WHERE grantee='PUBLIC' AND privilege_type='CREATE';" | xargs
+      register: public_check
+      changed_when: false
+      failed_when: false
+
+    - name: ИТОГОВЫЙ РЕЗУЛЬТАТ
+      debug:
+        msg:
+          - "РЕЗУЛЬТАТ ПРОВЕРКИ POSTGRESQL"
+          - "Порт: {{ port_check.stdout }}"
+          - "База данных secure_db: {{ 'создана' if db_check.rc == 0 else 'НЕ создана' }}"
+          - "Роль readers: {{ 'создана' if readers_check.stdout == 'readers' else 'НЕ создана' }}"
+          - "Пользователь user01: {{ 'создан' if user_check.stdout == 'user01' else 'НЕ создан' }}"
+          - "user01 в группе readers: {{ 'да' if member_check.stdout == '1' else 'нет' }}"
+          - "Права PUBLIC на CREATE: {{ 'отозваны' if public_check.stdout == '' else 'НЕ отозваны' }}"
