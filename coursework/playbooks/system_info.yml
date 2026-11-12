@@ -1,0 +1,34 @@
+
+---
+- name: Collect system information
+  hosts: department
+  gather_facts: true
+
+  vars:
+    info_header: "Информация о ПК"
+    info_separator: "───────────────────────────────"
+
+  tasks:
+    - name: Calculate system uptime
+      ansible.builtin.set_fact:
+        uptime_days: "{{ (ansible_facts['uptime_seconds'] // 86400) | int }}"
+        uptime_hours: "{{ ((ansible_facts['uptime_seconds'] % 86400) // 3600) | int }}"
+        uptime_minutes: "{{ ((ansible_facts['uptime_seconds'] % 3600) // 60) | int }}"
+
+    - name: Display system information
+      ansible.builtin.debug:
+        msg:
+          - "{{ info_header }}"
+          - "{{ info_separator }}"
+          - "Хост: {{ inventory_hostname }}"
+          - "FQDN: {{ ansible_facts['fqdn'] }}"
+          - "Версия Ansible: {{ ansible_version.full }}"
+          - "конфигурация: {{ ansible_config_file | default('Не определён') }}"
+          - "Дата/время: {{ ansible_facts['date_time']['date'] }} {{ ansible_facts['date_time']['time'] }} ({{ ansible_facts['date_time']['tz'] }})"
+          - "Пользователь: {{ ansible_facts['user_id'] }}"
+          - "Версия ОС: {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}"
+          - "Семейство ОС: {{ ansible_facts['os_family'] }}"
+          - "RAM: {{ '%.2f' | format(ansible_facts['memtotal_mb'] | float / 1024) }} ГБ"
+          - "IP-адреса: {{ ansible_facts['all_ipv4_addresses'] }}"
+          - "Время работы: {{ uptime_days }} дней {{ '%02d' | format(uptime_hours | int) }} часов {{ '%02d' | format(uptime_minutes | int) }} минут"
+          - "{{ info_separator }}"
