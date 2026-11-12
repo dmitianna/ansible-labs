@@ -22,8 +22,6 @@
           - "{{ info_separator }}"
           - "Хост: {{ inventory_hostname }}"
           - "FQDN: {{ ansible_facts['fqdn'] }}"
-          - "Версия Ansible: {{ ansible_version.full }}"
-          - "конфигурация: {{ ansible_config_file | default('Не определён') }}"
           - "Дата/время: {{ ansible_facts['date_time']['date'] }} {{ ansible_facts['date_time']['time'] }} ({{ ansible_facts['date_time']['tz'] }})"
           - "Пользователь: {{ ansible_facts['user_id'] }}"
           - "Версия ОС: {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}"
