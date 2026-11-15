@@ -1,0 +1,15 @@
+
+PLAY [Исправление параметров создания пользователей] ***************************
+
+TASK [Установка UMASK 027] *****************************************************
+ok: [vTestPC003]
+ok: [vTestPC002]
+
+TASK [Установка DIR_MODE 0700] *************************************************
+ok: [vTestPC002]
+ok: [vTestPC003]
+
+PLAY RECAP *********************************************************************
+vTestPC002                 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+vTestPC003                 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
