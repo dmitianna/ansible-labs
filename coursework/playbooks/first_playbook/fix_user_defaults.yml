@@ -1,0 +1,21 @@
+
+---
+- name: Исправление параметров создания пользователей
+  hosts: department
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Установка UMASK 027
+      ansible.builtin.lineinfile:
+        path: /etc/login.defs
+        regexp: '^[ \t]*UMASK[ \t]+'
+        line: 'UMASK 027'
+        backup: true
+
+    - name: Установка DIR_MODE 0700
+      ansible.builtin.lineinfile:
+        path: /etc/adduser.conf
+        regexp: '^[ \t]*#?[ \t]*DIR_MODE[ \t]*='
+        line: 'DIR_MODE=0700'
+        backup: true

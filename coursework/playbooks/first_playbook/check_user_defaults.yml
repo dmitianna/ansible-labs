@@ -1,0 +1,46 @@
+
+---
+- name: Проверка параметров создания пользователей
+  hosts: department
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Чтение файла login.defs
+      ansible.builtin.slurp:
+        src: /etc/login.defs
+      register: login_defs
+
+    - name: Чтение файла adduser.conf
+      ansible.builtin.slurp:
+        src: /etc/adduser.conf
+      register: adduser_conf
+
+    - name: Извлечение значений параметров
+      ansible.builtin.set_fact:
+        umask_values: >-
+          {{
+            (login_defs.content | b64decode)
+            | regex_findall('(?m)^[ \t]*UMASK[ \t]+([^#\s]+)')
+          }}
+        dir_mode_values: >-
+          {{
+            (adduser_conf.content | b64decode)
+            | regex_findall('(?m)^[ \t]*DIR_MODE[ \t]*=[ \t]*([^#\s]+)')
+          }}
+
+    - name: Проверка соответствия требованиям
+      ansible.builtin.set_fact:
+        umask_compliant: >-
+          {{ (umask_values | length == 1) and (umask_values[0] == '027') }}
+        dir_mode_compliant: >-
+          {{ (dir_mode_values | length == 1) and (dir_mode_values[0] == '0700') }}
+
+    - name: Вывод результатов проверки
+      ansible.builtin.debug:
+        msg:
+          - "Узел: {{ inventory_hostname }}"
+          - "UMASK: {{ umask_values | join(', ') }}"
+          - "UMASK соответствует требованиям: {{ umask_compliant }}"
+          - "DIR_MODE: {{ dir_mode_values | join(', ') }}"
+          - "DIR_MODE соответствует требованиям: {{ dir_mode_compliant }}"

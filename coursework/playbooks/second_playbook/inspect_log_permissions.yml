@@ -1,0 +1,36 @@
+
+---
+- name: Исследование прав доступа к системным журналам
+  hosts: department
+  become: true
+  gather_facts: false
+
+  vars:
+    log_files:
+      - /var/log/auth.log
+      - /var/log/syslog
+      - /var/log/dpkg.log
+      - /var/log/apt/history.log
+      - /var/log/apt/term.log
+
+  tasks:
+    - name: Получение сведений о файлах журналов
+      ansible.builtin.stat:
+        path: "{{ item }}"
+        follow: false
+        get_checksum: false
+      loop: "{{ log_files }}"
+      register: log_stats
+
+    - name: Вывод сведений о правах доступа
+      ansible.builtin.debug:
+        msg:
+          - "Файл: {{ item.item }}"
+          - "Существует: {{ item.stat.exists }}"
+          - "Тип: {{ 'обычный файл' if item.stat.isreg | default(false) else 'иной или отсутствует' }}"
+          - "Права: {{ item.stat.mode | default('не определены') }}"
+          - "Владелец: {{ item.stat.pw_name | default('не определён') }}"
+          - "Группа: {{ item.stat.gr_name | default('не определена') }}"
+      loop: "{{ log_stats.results }}"
+      loop_control:
+        label: "{{ item.item }}"

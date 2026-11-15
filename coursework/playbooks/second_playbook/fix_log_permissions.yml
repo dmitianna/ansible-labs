@@ -1,0 +1,42 @@
+
+---
+- name: Исправление прав доступа к системным журналам
+  hosts: department
+  become: true
+  gather_facts: false
+
+  vars:
+    log_files:
+      - /var/log/auth.log
+      - /var/log/syslog
+      - /var/log/dpkg.log
+      - /var/log/apt/history.log
+      - /var/log/apt/term.log
+
+  tasks:
+    - name: Проверка наличия файлов журналов
+      ansible.builtin.stat:
+        path: "{{ item }}"
+        follow: false
+        get_checksum: false
+      loop: "{{ log_files }}"
+      register: log_stats
+
+    - name: Проверка возможности исправления
+      ansible.builtin.assert:
+        that:
+          - item.stat.exists | default(false)
+          - item.stat.isreg | default(false)
+        fail_msg: "Файл {{ item.item }} отсутствует или не является обычным файлом"
+        quiet: true
+      loop: "{{ log_stats.results }}"
+      loop_control:
+        label: "{{ item.item }}"
+
+    - name: Удаление избыточных прав доступа
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: file
+        mode: 'g-wx,o-rwx'
+        follow: false
+      loop: "{{ log_files }}"
