@@ -1,0 +1,111 @@
+
+PLAY [Проверка прав доступа к системным журналам] ******************************
+
+TASK [Получение атрибутов файлов журналов] *************************************
+ok: [vTestPC002] => (item=/var/log/auth.log)
+ok: [vTestPC003] => (item=/var/log/auth.log)
+ok: [vTestPC002] => (item=/var/log/syslog)
+ok: [vTestPC003] => (item=/var/log/syslog)
+ok: [vTestPC002] => (item=/var/log/dpkg.log)
+ok: [vTestPC003] => (item=/var/log/dpkg.log)
+ok: [vTestPC002] => (item=/var/log/apt/history.log)
+ok: [vTestPC003] => (item=/var/log/apt/history.log)
+ok: [vTestPC003] => (item=/var/log/apt/term.log)
+ok: [vTestPC002] => (item=/var/log/apt/term.log)
+
+TASK [Вывод результатов проверки прав доступа] *********************************
+ok: [vTestPC003] => (item=/var/log/auth.log) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Файл: /var/log/auth.log",
+        "Существует: True",
+        "Права: 0640",
+        "Соответствует требованиям: True"
+    ]
+}
+ok: [vTestPC003] => (item=/var/log/syslog) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Файл: /var/log/syslog",
+        "Существует: True",
+        "Права: 0640",
+        "Соответствует требованиям: True"
+    ]
+}
+ok: [vTestPC002] => (item=/var/log/auth.log) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Файл: /var/log/auth.log",
+        "Существует: True",
+        "Права: 0640",
+        "Соответствует требованиям: True"
+    ]
+}
+ok: [vTestPC003] => (item=/var/log/dpkg.log) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Файл: /var/log/dpkg.log",
+        "Существует: True",
+        "Права: 0644",
+        "Соответствует требованиям: False"
+    ]
+}
+ok: [vTestPC002] => (item=/var/log/syslog) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Файл: /var/log/syslog",
+        "Существует: True",
+        "Права: 0640",
+        "Соответствует требованиям: True"
+    ]
+}
+ok: [vTestPC003] => (item=/var/log/apt/history.log) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Файл: /var/log/apt/history.log",
+        "Существует: True",
+        "Права: 0644",
+        "Соответствует требованиям: False"
+    ]
+}
+ok: [vTestPC003] => (item=/var/log/apt/term.log) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Файл: /var/log/apt/term.log",
+        "Существует: True",
+        "Права: 0640",
+        "Соответствует требованиям: True"
+    ]
+}
+ok: [vTestPC002] => (item=/var/log/dpkg.log) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Файл: /var/log/dpkg.log",
+        "Существует: True",
+        "Права: 0644",
+        "Соответствует требованиям: False"
+    ]
+}
+ok: [vTestPC002] => (item=/var/log/apt/history.log) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Файл: /var/log/apt/history.log",
+        "Существует: True",
+        "Права: 0644",
+        "Соответствует требованиям: False"
+    ]
+}
+ok: [vTestPC002] => (item=/var/log/apt/term.log) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Файл: /var/log/apt/term.log",
+        "Существует: True",
+        "Права: 0640",
+        "Соответствует требованиям: True"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+vTestPC002                 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+vTestPC003                 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

@@ -1,0 +1,42 @@
+
+---
+- name: Проверка прав доступа к системным журналам
+  hosts: department
+  become: true
+  gather_facts: false
+
+  vars:
+    log_files:
+      - /var/log/auth.log
+      - /var/log/syslog
+      - /var/log/dpkg.log
+      - /var/log/apt/history.log
+      - /var/log/apt/term.log
+
+  tasks:
+    - name: Получение атрибутов файлов журналов
+      ansible.builtin.stat:
+        path: "{{ item }}"
+        follow: false
+        get_checksum: false
+      loop: "{{ log_files }}"
+      register: log_stats
+
+    - name: Вывод результатов проверки прав доступа
+      ansible.builtin.debug:
+        msg:
+          - "Узел: {{ inventory_hostname }}"
+          - "Файл: {{ item.item }}"
+          - "Существует: {{ item.stat.exists }}"
+          - "Права: {{ item.stat.mode | default('не определены') }}"
+          - "Соответствует требованиям: {{ compliant }}"
+      vars:
+        compliant: >-
+          {{
+            (item.stat.exists | default(false))
+            and (item.stat.isreg | default(false))
+            and ((item.stat.mode | default('')) is match('^0[0-7][04]0$'))
+          }}
+      loop: "{{ log_stats.results }}"
+      loop_control:
+        label: "{{ item.item }}"

@@ -1,0 +1,119 @@
+
+TASK [Получение сведений о файлах журналов] *********************************************************************************************************
+ok: [vTestPC002] => (item=/var/log/auth.log)
+ok: [vTestPC003] => (item=/var/log/auth.log)
+ok: [vTestPC002] => (item=/var/log/syslog)
+ok: [vTestPC003] => (item=/var/log/syslog)
+ok: [vTestPC002] => (item=/var/log/dpkg.log)
+ok: [vTestPC003] => (item=/var/log/dpkg.log)
+ok: [vTestPC002] => (item=/var/log/apt/history.log)
+ok: [vTestPC003] => (item=/var/log/apt/history.log)
+ok: [vTestPC002] => (item=/var/log/apt/term.log)
+ok: [vTestPC003] => (item=/var/log/apt/term.log)
+
+TASK [Вывод сведений о правах доступа] **************************************************************************************************************
+ok: [vTestPC003] => (item=/var/log/auth.log) => {
+    "msg": [
+        "Файл: /var/log/auth.log",
+        "Существует: True",
+        "Тип: обычный файл",
+        "Права: 0640",
+        "Владелец: syslog",
+        "Группа: adm"
+    ]
+}
+ok: [vTestPC002] => (item=/var/log/auth.log) => {
+    "msg": [
+        "Файл: /var/log/auth.log",
+        "Существует: True",
+        "Тип: обычный файл",
+        "Права: 0640",
+        "Владелец: syslog",
+        "Группа: adm"
+    ]
+}
+ok: [vTestPC003] => (item=/var/log/syslog) => {
+    "msg": [
+        "Файл: /var/log/syslog",
+        "Существует: True",
+        "Тип: обычный файл",
+        "Права: 0640",
+        "Владелец: syslog",
+        "Группа: adm"
+    ]
+}
+ok: [vTestPC002] => (item=/var/log/syslog) => {
+    "msg": [
+        "Файл: /var/log/syslog",
+        "Существует: True",
+        "Тип: обычный файл",
+        "Права: 0640",
+        "Владелец: syslog",
+        "Группа: adm"
+    ]
+}
+ok: [vTestPC003] => (item=/var/log/dpkg.log) => {
+    "msg": [
+        "Файл: /var/log/dpkg.log",
+        "Существует: True",
+        "Тип: обычный файл",
+        "Права: 0644",
+        "Владелец: root",
+        "Группа: root"
+    ]
+}
+ok: [vTestPC003] => (item=/var/log/apt/history.log) => {
+    "msg": [
+        "Файл: /var/log/apt/history.log",
+        "Существует: True",
+        "Тип: обычный файл",
+        "Права: 0644",
+        "Владелец: root",
+        "Группа: root"
+    ]
+}
+ok: [vTestPC002] => (item=/var/log/dpkg.log) => {
+    "msg": [
+        "Файл: /var/log/dpkg.log",
+        "Существует: True",
+        "Тип: обычный файл",
+        "Права: 0644",
+        "Владелец: root",
+        "Группа: root"
+    ]
+}
+ok: [vTestPC003] => (item=/var/log/apt/term.log) => {
+    "msg": [
+        "Файл: /var/log/apt/term.log",
+        "Существует: True",
+        "Тип: обычный файл",
+        "Права: 0640",
+        "Владелец: root",
+        "Группа: adm"
+    ]
+}
+ok: [vTestPC002] => (item=/var/log/apt/history.log) => {
+    "msg": [
+        "Файл: /var/log/apt/history.log",
+        "Существует: True",
+        "Тип: обычный файл",
+        "Права: 0644",
+        "Владелец: root",
+        "Группа: root"
+    ]
+}
+ok: [vTestPC002] => (item=/var/log/apt/term.log) => {
+    "msg": [
+        "Файл: /var/log/apt/term.log",
+        "Существует: True",
+        "Тип: обычный файл",
+        "Права: 0640",
+        "Владелец: root",
+        "Группа: adm"
+    ]
+}
+
+PLAY RECAP ******************************************************************************************************************************************
+vTestPC002                 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+vTestPC003                 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
