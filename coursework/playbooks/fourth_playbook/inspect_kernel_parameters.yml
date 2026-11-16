@@ -1,0 +1,51 @@
+
+---
+- name: Исследование параметров защиты ядра Linux
+  hosts: department
+  become: true
+  gather_facts: false
+
+  vars:
+    kernel_parameters:
+      - name: kernel.dmesg_restrict
+        expected: '1'
+      - name: kernel.kptr_restrict
+        expected: '2'
+      - name: vm.unprivileged_userfaultfd
+        expected: '0'
+      - name: kernel.randomize_va_space
+        expected: '2'
+      - name: fs.protected_symlinks
+        expected: '1'
+      - name: fs.protected_hardlinks
+        expected: '1'
+      - name: fs.suid_dumpable
+        expected: '0'
+
+  tasks:
+    - name: Получение действующих значений параметров ядра
+      ansible.builtin.command:
+        argv:
+          - sysctl
+          - -n
+          - "{{ item.name }}"
+      loop: "{{ kernel_parameters }}"
+      loop_control:
+        label: "{{ item.name }}"
+      register: kernel_values
+      changed_when: false
+      failed_when: false
+
+    - name: Вывод результатов исследования
+      ansible.builtin.debug:
+        msg:
+          - "Узел: {{ inventory_hostname }}"
+          - "Параметр: {{ item.item.name }}"
+          - "Доступен: {{ item.rc == 0 }}"
+          - "Фактическое значение: {{ item.stdout | trim if item.rc == 0 else 'не получено' }}"
+          - "Требуемое значение: {{ item.item.expected }}"
+          - "Соответствует: {{ (item.stdout | trim) == item.item.expected if item.rc == 0 else 'проверка не выполнена' }}"
+          - "Ошибка: {{ item.stderr | trim if item.rc != 0 else 'нет' }}"
+      loop: "{{ kernel_values.results }}"
+      loop_control:
+        label: "{{ item.item.name }}"

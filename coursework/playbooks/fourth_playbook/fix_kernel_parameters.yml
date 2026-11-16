@@ -1,0 +1,50 @@
+
+---
+- name: Исправление параметров защиты ядра Linux
+  hosts: department
+  become: true
+  gather_facts: false
+
+  vars:
+    kernel_parameters:
+      - name: kernel.dmesg_restrict
+        expected: '1'
+      - name: kernel.kptr_restrict
+        expected: '2'
+      - name: vm.unprivileged_userfaultfd
+        expected: '0'
+      - name: kernel.randomize_va_space
+        expected: '2'
+      - name: fs.protected_symlinks
+        expected: '1'
+      - name: fs.protected_hardlinks
+        expected: '1'
+      - name: fs.suid_dumpable
+        expected: '0'
+
+  tasks:
+    - name: Отключение сбора отчётов о сбоях
+      ansible.builtin.lineinfile:
+        path: /etc/default/apport
+        regexp: '^\s*enabled\s*='
+        line: 'enabled=0'
+        backup: true
+
+    - name: Остановка и отключение службы Apport
+      ansible.builtin.systemd_service:
+        name: apport.service
+        state: stopped
+        enabled: false
+        masked: true
+
+    - name: Установка параметров защиты ядра
+      ansible.posix.sysctl:
+        name: "{{ item.name }}"
+        value: "{{ item.expected }}"
+        sysctl_file: /etc/sysctl.d/99-coursework-security.conf
+        state: present
+        sysctl_set: true
+        reload: true
+      loop: "{{ kernel_parameters }}"
+      loop_control:
+        label: "{{ item.name }}"
