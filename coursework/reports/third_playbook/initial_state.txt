@@ -1,157 +1,45 @@
 
-PLAY [Исследование состояния системных служб] **********************************
+PLAY [Исследование подсистемы аудита Linux] ************************************
 
 TASK [Сбор сведений о системных службах] ***************************************
 ok: [vTestPC002]
 ok: [vTestPC003]
 
-TASK [Вывод состояния выбранных служб] *****************************************
-ok: [vTestPC002] => (item=ssh.service) => {
-    "msg": [
-        "Узел: vTestPC002",
-        "Служба: ssh.service",
-        "Текущее состояние: running",
-        "Статус автозапуска: enabled"
-    ]
-}
-ok: [vTestPC003] => (item=ssh.service) => {
-    "msg": [
-        "Узел: vTestPC003",
-        "Служба: ssh.service",
-        "Текущее состояние: running",
-        "Статус автозапуска: enabled"
-    ]
-}
-ok: [vTestPC002] => (item=avahi-daemon.service) => {
-    "msg": [
-        "Узел: vTestPC002",
-        "Служба: avahi-daemon.service",
-        "Текущее состояние: running",
-        "Статус автозапуска: enabled"
-    ]
-}
-ok: [vTestPC002] => (item=cups.service) => {
-    "msg": [
-        "Узел: vTestPC002",
-        "Служба: cups.service",
-        "Текущее состояние: running",
-        "Статус автозапуска: enabled"
-    ]
-}
-ok: [vTestPC003] => (item=avahi-daemon.service) => {
+TASK [Проверка наличия auditctl] ***********************************************
+ok: [vTestPC002]
+ok: [vTestPC003]
+
+TASK [Получение состояния аудита ядра] *****************************************
+skipping: [vTestPC002]
+skipping: [vTestPC003]
+
+TASK [Получение действующих правил аудита] *************************************
+skipping: [vTestPC002]
+skipping: [vTestPC003]
+
+TASK [Вывод результатов исследования] ******************************************
+ok: [vTestPC003] => {
     "msg": [
         "Узел: vTestPC003",
-        "Служба: avahi-daemon.service",
-        "Текущее состояние: running",
-        "Статус автозапуска: enabled"
+        "Состояние auditd: stopped",
+        "Автозапуск auditd: not-found",
+        "auditctl установлен: False",
+        "Состояние аудита ядра: не получено",
+        "Действующие правила: не получены"
     ]
 }
-ok: [vTestPC002] => (item=rpcbind.service) => {
+ok: [vTestPC002] => {
     "msg": [
         "Узел: vTestPC002",
-        "Служба: rpcbind.service",
-        "Текущее состояние: не обнаружена",
-        "Статус автозапуска: не определён"
-    ]
-}
-ok: [vTestPC003] => (item=cups.service) => {
-    "msg": [
-        "Узел: vTestPC003",
-        "Служба: cups.service",
-        "Текущее состояние: running",
-        "Статус автозапуска: enabled"
-    ]
-}
-ok: [vTestPC002] => (item=smbd.service) => {
-    "msg": [
-        "Узел: vTestPC002",
-        "Служба: smbd.service",
-        "Текущее состояние: не обнаружена",
-        "Статус автозапуска: не определён"
-    ]
-}
-ok: [vTestPC003] => (item=rpcbind.service) => {
-    "msg": [
-        "Узел: vTestPC003",
-        "Служба: rpcbind.service",
-        "Текущее состояние: не обнаружена",
-        "Статус автозапуска: не определён"
-    ]
-}
-ok: [vTestPC002] => (item=nfs-server.service) => {
-    "msg": [
-        "Узел: vTestPC002",
-        "Служба: nfs-server.service",
-        "Текущее состояние: не обнаружена",
-        "Статус автозапуска: не определён"
-    ]
-}
-ok: [vTestPC003] => (item=smbd.service) => {
-    "msg": [
-        "Узел: vTestPC003",
-        "Служба: smbd.service",
-        "Текущее состояние: не обнаружена",
-        "Статус автозапуска: не определён"
-    ]
-}
-ok: [vTestPC002] => (item=vsftpd.service) => {
-    "msg": [
-        "Узел: vTestPC002",
-        "Служба: vsftpd.service",
-        "Текущее состояние: не обнаружена",
-        "Статус автозапуска: не определён"
-    ]
-}
-ok: [vTestPC002] => (item=snmpd.service) => {
-    "msg": [
-        "Узел: vTestPC002",
-        "Служба: snmpd.service",
-        "Текущее состояние: не обнаружена",
-        "Статус автозапуска: не определён"
-    ]
-}
-ok: [vTestPC003] => (item=nfs-server.service) => {
-    "msg": [
-        "Узел: vTestPC003",
-        "Служба: nfs-server.service",
-        "Текущее состояние: не обнаружена",
-        "Статус автозапуска: не определён"
-    ]
-}
-ok: [vTestPC002] => (item=autofs.service) => {
-    "msg": [
-        "Узел: vTestPC002",
-        "Служба: autofs.service",
-        "Текущее состояние: не обнаружена",
-        "Статус автозапуска: не определён"
-    ]
-}
-ok: [vTestPC003] => (item=vsftpd.service) => {
-    "msg": [
-        "Узел: vTestPC003",
-        "Служба: vsftpd.service",
-        "Текущее состояние: не обнаружена",
-        "Статус автозапуска: не определён"
-    ]
-}
-ok: [vTestPC003] => (item=snmpd.service) => {
-    "msg": [
-        "Узел: vTestPC003",
-        "Служба: snmpd.service",
-        "Текущее состояние: не обнаружена",
-        "Статус автозапуска: не определён"
-    ]
-}
-ok: [vTestPC003] => (item=autofs.service) => {
-    "msg": [
-        "Узел: vTestPC003",
-        "Служба: autofs.service",
-        "Текущее состояние: не обнаружена",
-        "Статус автозапуска: не определён"
+        "Состояние auditd: stopped",
+        "Автозапуск auditd: not-found",
+        "auditctl установлен: False",
+        "Состояние аудита ядра: не получено",
+        "Действующие правила: не получены"
     ]
 }
 
 PLAY RECAP *********************************************************************
-vTestPC002                 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-vTestPC003                 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+vTestPC002                 : ok=3    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+vTestPC003                 : ok=3    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
 

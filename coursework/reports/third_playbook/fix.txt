@@ -1,0 +1,23 @@
+
+PLAY [Настройка подсистемы аудита Linux] ***************************************
+
+TASK [Установка подсистемы аудита] *********************************************
+changed: [vTestPC002]
+changed: [vTestPC003]
+
+TASK [Запуск и включение службы аудита] ****************************************
+ok: [vTestPC002]
+ok: [vTestPC003]
+
+TASK [Настройка правил аудита учётных записей] *********************************
+changed: [vTestPC003]
+changed: [vTestPC002]
+
+RUNNING HANDLER [Загрузка правил аудита] ***************************************
+changed: [vTestPC002]
+changed: [vTestPC003]
+
+PLAY RECAP *********************************************************************
+vTestPC002                 : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+vTestPC003                 : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

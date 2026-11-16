@@ -1,0 +1,68 @@
+
+---
+- name: Проверка подсистемы аудита Linux
+  hosts: department
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Получение сведений о службах
+      ansible.builtin.service_facts:
+
+    - name: Проверка наличия auditctl
+      ansible.builtin.stat:
+        path: /usr/sbin/auditctl
+      register: auditctl_file
+
+    - name: Проверка состояния аудита ядра
+      ansible.builtin.command:
+        argv:
+          - /usr/sbin/auditctl
+          - -s
+      register: audit_status
+      changed_when: false
+      failed_when: false
+      when: auditctl_file.stat.exists
+
+    - name: Проверка загруженных правил
+      ansible.builtin.command:
+        argv:
+          - /usr/sbin/auditctl
+          - -l
+      register: audit_rules
+      changed_when: false
+      failed_when: false
+      when: auditctl_file.stat.exists
+
+    - name: Определение соответствия требованиям
+      ansible.builtin.set_fact:
+        audit_service_ok: >-
+          {{
+            ansible_facts.services.get('auditd.service', {}).get('state') == 'running'
+            and ansible_facts.services.get('auditd.service', {}).get('status') == 'enabled'
+          }}
+        audit_kernel_ok: >-
+          {{
+            (audit_status.rc | default(1)) == 0
+            and (
+              'enabled 1' in (audit_status.stdout_lines | default([]))
+              or 'enabled 2' in (audit_status.stdout_lines | default([]))
+            )
+          }}
+        audit_rules_ok: >-
+          {{
+            (audit_rules.rc | default(1)) == 0
+            and '-w /etc/passwd -p wa -k coursework_identity'
+                in (audit_rules.stdout_lines | default([]))
+            and '-w /etc/shadow -p wa -k coursework_identity'
+                in (audit_rules.stdout_lines | default([]))
+          }}
+
+    - name: Вывод результатов контроля
+      ansible.builtin.debug:
+        msg:
+          - "Узел: {{ inventory_hostname }}"
+          - "Служба аудита: {{ audit_service_ok }}"
+          - "Аудит ядра: {{ audit_kernel_ok }}"
+          - "Правила аудита: {{ audit_rules_ok }}"
+          - "Общее соответствие: {{ audit_service_ok and audit_kernel_ok and audit_rules_ok }}"

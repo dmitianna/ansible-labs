@@ -1,0 +1,45 @@
+
+---
+- name: Исследование подсистемы аудита Linux
+  hosts: department
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Сбор сведений о системных службах
+      ansible.builtin.service_facts:
+
+    - name: Проверка наличия auditctl
+      ansible.builtin.stat:
+        path: /usr/sbin/auditctl
+      register: auditctl_file
+
+    - name: Получение состояния аудита ядра
+      ansible.builtin.command:
+        argv:
+          - /usr/sbin/auditctl
+          - -s
+      register: audit_status
+      changed_when: false
+      failed_when: false
+      when: auditctl_file.stat.exists
+
+    - name: Получение действующих правил аудита
+      ansible.builtin.command:
+        argv:
+          - /usr/sbin/auditctl
+          - -l
+      register: audit_rules
+      changed_when: false
+      failed_when: false
+      when: auditctl_file.stat.exists
+
+    - name: Вывод результатов исследования
+      ansible.builtin.debug:
+        msg:
+          - "Узел: {{ inventory_hostname }}"
+          - "Состояние auditd: {{ ansible_facts.services.get('auditd.service', {}).get('state', 'не обнаружена') }}"
+          - "Автозапуск auditd: {{ ansible_facts.services.get('auditd.service', {}).get('status', 'не определён') }}"
+          - "auditctl установлен: {{ auditctl_file.stat.exists }}"
+          - "Состояние аудита ядра: {{ audit_status.stdout_lines | default([]) if audit_status.rc | default(1) == 0 else 'не получено' }}"
+          - "Действующие правила: {{ audit_rules.stdout_lines | default([]) if audit_rules.rc | default(1) == 0 else 'не получены' }}"
