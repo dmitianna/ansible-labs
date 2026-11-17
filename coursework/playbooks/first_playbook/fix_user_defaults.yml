@@ -6,16 +6,48 @@
   gather_facts: false
 
   tasks:
+    - name: Чтение login.defs перед исправлением
+      ansible.builtin.slurp:
+        src: /etc/login.defs
+      register: login_defs_before
+
+    - name: Чтение adduser.conf перед исправлением
+      ansible.builtin.slurp:
+        src: /etc/adduser.conf
+      register: adduser_conf_before
+
+    - name: Удаление дублирующихся активных записей UMASK
+      ansible.builtin.lineinfile:
+        path: /etc/login.defs
+        regexp: '^[ \t]*UMASK(?:[ \t]+|$)'
+        state: absent
+        backup: true
+      when: >-
+        ((login_defs_before.content | b64decode)
+        | regex_findall('(?m)^[ \t]*UMASK(?:[ \t]+|$)')
+        | length) > 1
+
     - name: Установка UMASK 027
       ansible.builtin.lineinfile:
         path: /etc/login.defs
-        regexp: '^[ \t]*UMASK[ \t]+'
+        regexp: '^[ \t]*UMASK(?:[ \t]+|$)'
         line: 'UMASK 027'
         backup: true
+
+    - name: Удаление дублирующихся активных записей DIR_MODE
+      ansible.builtin.lineinfile:
+        path: /etc/adduser.conf
+        regexp: '^[ \t]*DIR_MODE[ \t]*='
+        state: absent
+        backup: true
+      when: >-
+        ((adduser_conf_before.content | b64decode)
+        | regex_findall('(?m)^[ \t]*DIR_MODE[ \t]*=')
+        | length) > 1
 
     - name: Установка DIR_MODE 0700
       ansible.builtin.lineinfile:
         path: /etc/adduser.conf
-        regexp: '^[ \t]*#?[ \t]*DIR_MODE[ \t]*='
+        regexp: '^[ \t]*DIR_MODE[ \t]*='
         line: 'DIR_MODE=0700'
         backup: true
