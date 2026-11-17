@@ -35,6 +35,26 @@
       register: kernel_values
       changed_when: false
       failed_when: false
+      check_mode: false
+
+    - name: Инициализация общего результата проверки ядра
+      ansible.builtin.set_fact:
+        kernel_compliant: true
+        kernel_check_error: false
+
+    - name: Объединение результатов проверки параметров ядра
+      ansible.builtin.set_fact:
+        kernel_check_error: >-
+          {{ (kernel_check_error | bool) or ((item.rc | default(1)) != 0) }}
+        kernel_compliant: >-
+          {{
+            (kernel_compliant | bool)
+            and ((item.rc | default(1)) == 0)
+            and ((item.stdout | default('') | trim) == item.item.expected)
+          }}
+      loop: "{{ kernel_values.results }}"
+      loop_control:
+        label: "{{ item.item.name }}"
 
     - name: Вывод результатов исследования
       ansible.builtin.debug:
