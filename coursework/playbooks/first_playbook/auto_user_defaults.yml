@@ -1,0 +1,51 @@
+---
+- import_playbook: check_user_defaults.yml
+
+- name: План исправления параметров создания пользователей
+  hosts: department
+  gather_facts: false
+  tasks:
+    - name: Сохранение исходного результата
+      ansible.builtin.set_fact:
+        user_defaults_needs_fix: >-
+          {{ not ((umask_compliant | bool) and (dir_mode_compliant | bool)) }}
+
+    - name: Вывод плана
+      ansible.builtin.debug:
+        msg:
+          - "Узел: {{ inventory_hostname }}"
+          - "Проверка: {{ 'НЕ СООТВЕТСТВУЕТ' if user_defaults_needs_fix else 'СООТВЕТСТВУЕТ' }}"
+          - "Действие: {{ 'требуется исправление' if user_defaults_needs_fix else 'исправление не требуется' }}"
+
+- import_playbook: fix_user_defaults.yml
+  when:
+    - user_defaults_needs_fix | bool
+    - not ansible_check_mode
+
+- import_playbook: check_user_defaults.yml
+  when:
+    - user_defaults_needs_fix | bool
+    - not ansible_check_mode
+
+- name: Итог контроля параметров создания пользователей
+  hosts: department
+  gather_facts: false
+  tasks:
+    - name: Вывод итога по узлу
+      ansible.builtin.debug:
+        msg:
+          - "Узел: {{ inventory_hostname }}"
+          - "Режим: {{ 'только проверка, без изменений (--check)' if ansible_check_mode else 'проверка и исправление' }}"
+          - "Исправление: {{ 'НЕ ВЫПОЛНЯЛОСЬ (--check)' if ansible_check_mode else ('ВЫПОЛНЕНО' if user_defaults_needs_fix else 'НЕ ТРЕБОВАЛОСЬ') }}"
+          - "UMASK: {{ (umask_values | join(', ')) or 'не задано' }}; требуется 027"
+          - "DIR_MODE: {{ (dir_mode_values | join(', ')) or 'не задано' }}; требуется 0700"
+          - "Итог: {{ 'СООТВЕТСТВУЕТ' if (umask_compliant | bool) and (dir_mode_compliant | bool) else 'СООТВЕТСТВИЕ НЕ ДОСТИГНУТО' }}"
+
+    - name: Подтверждение соответствия после исправления
+      ansible.builtin.assert:
+        that:
+          - umask_compliant | bool
+          - dir_mode_compliant | bool
+        fail_msg: Исправление не устранило все отклонения. Проверьте результаты выше.
+        quiet: true
+      when: not ansible_check_mode
