@@ -29,31 +29,9 @@ ok: [vTestPC002] => (item=kernel.dmesg_restrict) => {
         "Ошибка: нет"
     ]
 }
-ok: [vTestPC003] => (item=kernel.dmesg_restrict) => {
-    "msg": [
-        "Узел: vTestPC003",
-        "Параметр: kernel.dmesg_restrict",
-        "Доступен: True",
-        "Фактическое значение: 1",
-        "Требуемое значение: 1",
-        "Соответствует: True",
-        "Ошибка: нет"
-    ]
-}
 ok: [vTestPC002] => (item=kernel.kptr_restrict) => {
     "msg": [
         "Узел: vTestPC002",
-        "Параметр: kernel.kptr_restrict",
-        "Доступен: True",
-        "Фактическое значение: 1",
-        "Требуемое значение: 2",
-        "Соответствует: False",
-        "Ошибка: нет"
-    ]
-}
-ok: [vTestPC003] => (item=kernel.kptr_restrict) => {
-    "msg": [
-        "Узел: vTestPC003",
         "Параметр: kernel.kptr_restrict",
         "Доступен: True",
         "Фактическое значение: 1",
@@ -73,17 +51,6 @@ ok: [vTestPC002] => (item=vm.unprivileged_userfaultfd) => {
         "Ошибка: нет"
     ]
 }
-ok: [vTestPC003] => (item=vm.unprivileged_userfaultfd) => {
-    "msg": [
-        "Узел: vTestPC003",
-        "Параметр: vm.unprivileged_userfaultfd",
-        "Доступен: True",
-        "Фактическое значение: 0",
-        "Требуемое значение: 0",
-        "Соответствует: True",
-        "Ошибка: нет"
-    ]
-}
 ok: [vTestPC002] => (item=kernel.randomize_va_space) => {
     "msg": [
         "Узел: vTestPC002",
@@ -95,13 +62,13 @@ ok: [vTestPC002] => (item=kernel.randomize_va_space) => {
         "Ошибка: нет"
     ]
 }
-ok: [vTestPC003] => (item=kernel.randomize_va_space) => {
+ok: [vTestPC003] => (item=kernel.dmesg_restrict) => {
     "msg": [
         "Узел: vTestPC003",
-        "Параметр: kernel.randomize_va_space",
+        "Параметр: kernel.dmesg_restrict",
         "Доступен: True",
-        "Фактическое значение: 2",
-        "Требуемое значение: 2",
+        "Фактическое значение: 1",
+        "Требуемое значение: 1",
         "Соответствует: True",
         "Ошибка: нет"
     ]
@@ -117,14 +84,14 @@ ok: [vTestPC002] => (item=fs.protected_symlinks) => {
         "Ошибка: нет"
     ]
 }
-ok: [vTestPC003] => (item=fs.protected_symlinks) => {
+ok: [vTestPC003] => (item=kernel.kptr_restrict) => {
     "msg": [
         "Узел: vTestPC003",
-        "Параметр: fs.protected_symlinks",
+        "Параметр: kernel.kptr_restrict",
         "Доступен: True",
         "Фактическое значение: 1",
-        "Требуемое значение: 1",
-        "Соответствует: True",
+        "Требуемое значение: 2",
+        "Соответствует: False",
         "Ошибка: нет"
     ]
 }
@@ -132,6 +99,50 @@ ok: [vTestPC002] => (item=fs.protected_hardlinks) => {
     "msg": [
         "Узел: vTestPC002",
         "Параметр: fs.protected_hardlinks",
+        "Доступен: True",
+        "Фактическое значение: 1",
+        "Требуемое значение: 1",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC003] => (item=vm.unprivileged_userfaultfd) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: vm.unprivileged_userfaultfd",
+        "Доступен: True",
+        "Фактическое значение: 0",
+        "Требуемое значение: 0",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC002] => (item=fs.suid_dumpable) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Параметр: fs.suid_dumpable",
+        "Доступен: True",
+        "Фактическое значение: 2",
+        "Требуемое значение: 0",
+        "Соответствует: False",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC003] => (item=kernel.randomize_va_space) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: kernel.randomize_va_space",
+        "Доступен: True",
+        "Фактическое значение: 2",
+        "Требуемое значение: 2",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC003] => (item=fs.protected_symlinks) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: fs.protected_symlinks",
         "Доступен: True",
         "Фактическое значение: 1",
         "Требуемое значение: 1",
@@ -147,17 +158,6 @@ ok: [vTestPC003] => (item=fs.protected_hardlinks) => {
         "Фактическое значение: 1",
         "Требуемое значение: 1",
         "Соответствует: True",
-        "Ошибка: нет"
-    ]
-}
-ok: [vTestPC002] => (item=fs.suid_dumpable) => {
-    "msg": [
-        "Узел: vTestPC002",
-        "Параметр: fs.suid_dumpable",
-        "Доступен: True",
-        "Фактическое значение: 2",
-        "Требуемое значение: 0",
-        "Соответствует: False",
         "Ошибка: нет"
     ]
 }

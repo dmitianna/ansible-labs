@@ -1,31 +1,23 @@
 
 PLAY [Исправление параметров защиты ядра Linux] ********************************
 
-TASK [Отключение сбора отчётов о сбоях] ****************************************
-ok: [vTestPC003]
-ok: [vTestPC002]
-
-TASK [Остановка и отключение службы Apport] ************************************
-ok: [vTestPC003]
-ok: [vTestPC002]
-
 TASK [Установка параметров защиты ядра] ****************************************
-ok: [vTestPC002] => (item=kernel.dmesg_restrict)
 ok: [vTestPC003] => (item=kernel.dmesg_restrict)
+ok: [vTestPC002] => (item=kernel.dmesg_restrict)
 ok: [vTestPC003] => (item=kernel.kptr_restrict)
 ok: [vTestPC002] => (item=kernel.kptr_restrict)
-ok: [vTestPC002] => (item=vm.unprivileged_userfaultfd)
 ok: [vTestPC003] => (item=vm.unprivileged_userfaultfd)
-ok: [vTestPC002] => (item=kernel.randomize_va_space)
+ok: [vTestPC002] => (item=vm.unprivileged_userfaultfd)
 ok: [vTestPC003] => (item=kernel.randomize_va_space)
-ok: [vTestPC002] => (item=fs.protected_symlinks)
+ok: [vTestPC002] => (item=kernel.randomize_va_space)
 ok: [vTestPC003] => (item=fs.protected_symlinks)
-ok: [vTestPC002] => (item=fs.protected_hardlinks)
+ok: [vTestPC002] => (item=fs.protected_symlinks)
 ok: [vTestPC003] => (item=fs.protected_hardlinks)
-ok: [vTestPC002] => (item=fs.suid_dumpable)
+ok: [vTestPC002] => (item=fs.protected_hardlinks)
 ok: [vTestPC003] => (item=fs.suid_dumpable)
+ok: [vTestPC002] => (item=fs.suid_dumpable)
 
 PLAY RECAP *********************************************************************
-vTestPC002                 : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-vTestPC003                 : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+vTestPC002                 : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+vTestPC003                 : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 

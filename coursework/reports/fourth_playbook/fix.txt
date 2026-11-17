@@ -1,14 +1,6 @@
 
 PLAY [Исправление параметров защиты ядра Linux] ********************************
 
-TASK [Отключение сбора отчётов о сбоях] ****************************************
-changed: [vTestPC002]
-changed: [vTestPC003]
-
-TASK [Остановка и отключение службы Apport] ************************************
-changed: [vTestPC002]
-changed: [vTestPC003]
-
 TASK [Установка параметров защиты ядра] ****************************************
 changed: [vTestPC002] => (item=kernel.dmesg_restrict)
 changed: [vTestPC003] => (item=kernel.dmesg_restrict)
@@ -26,6 +18,6 @@ changed: [vTestPC002] => (item=fs.suid_dumpable)
 changed: [vTestPC003] => (item=fs.suid_dumpable)
 
 PLAY RECAP *********************************************************************
-vTestPC002                 : ok=3    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-vTestPC003                 : ok=3    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+vTestPC002                 : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+vTestPC003                 : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 

@@ -8,16 +8,27 @@ ok: [vTestPC002] => (item=kernel.kptr_restrict)
 ok: [vTestPC003] => (item=kernel.kptr_restrict)
 ok: [vTestPC002] => (item=vm.unprivileged_userfaultfd)
 ok: [vTestPC003] => (item=vm.unprivileged_userfaultfd)
-ok: [vTestPC002] => (item=kernel.randomize_va_space)
 ok: [vTestPC003] => (item=kernel.randomize_va_space)
-ok: [vTestPC002] => (item=fs.protected_symlinks)
+ok: [vTestPC002] => (item=kernel.randomize_va_space)
 ok: [vTestPC003] => (item=fs.protected_symlinks)
-ok: [vTestPC002] => (item=fs.protected_hardlinks)
+ok: [vTestPC002] => (item=fs.protected_symlinks)
 ok: [vTestPC003] => (item=fs.protected_hardlinks)
-ok: [vTestPC002] => (item=fs.suid_dumpable)
+ok: [vTestPC002] => (item=fs.protected_hardlinks)
 ok: [vTestPC003] => (item=fs.suid_dumpable)
+ok: [vTestPC002] => (item=fs.suid_dumpable)
 
 TASK [Вывод результатов исследования] ******************************************
+ok: [vTestPC003] => (item=kernel.dmesg_restrict) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: kernel.dmesg_restrict",
+        "Доступен: True",
+        "Фактическое значение: 1",
+        "Требуемое значение: 1",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
 ok: [vTestPC002] => (item=kernel.dmesg_restrict) => {
     "msg": [
         "Узел: vTestPC002",
@@ -40,13 +51,13 @@ ok: [vTestPC002] => (item=kernel.kptr_restrict) => {
         "Ошибка: нет"
     ]
 }
-ok: [vTestPC003] => (item=kernel.dmesg_restrict) => {
+ok: [vTestPC003] => (item=kernel.kptr_restrict) => {
     "msg": [
         "Узел: vTestPC003",
-        "Параметр: kernel.dmesg_restrict",
+        "Параметр: kernel.kptr_restrict",
         "Доступен: True",
-        "Фактическое значение: 1",
-        "Требуемое значение: 1",
+        "Фактическое значение: 2",
+        "Требуемое значение: 2",
         "Соответствует: True",
         "Ошибка: нет"
     ]
@@ -62,13 +73,13 @@ ok: [vTestPC002] => (item=vm.unprivileged_userfaultfd) => {
         "Ошибка: нет"
     ]
 }
-ok: [vTestPC003] => (item=kernel.kptr_restrict) => {
+ok: [vTestPC003] => (item=vm.unprivileged_userfaultfd) => {
     "msg": [
         "Узел: vTestPC003",
-        "Параметр: kernel.kptr_restrict",
+        "Параметр: vm.unprivileged_userfaultfd",
         "Доступен: True",
-        "Фактическое значение: 2",
-        "Требуемое значение: 2",
+        "Фактическое значение: 0",
+        "Требуемое значение: 0",
         "Соответствует: True",
         "Ошибка: нет"
     ]
@@ -80,17 +91,6 @@ ok: [vTestPC002] => (item=kernel.randomize_va_space) => {
         "Доступен: True",
         "Фактическое значение: 2",
         "Требуемое значение: 2",
-        "Соответствует: True",
-        "Ошибка: нет"
-    ]
-}
-ok: [vTestPC003] => (item=vm.unprivileged_userfaultfd) => {
-    "msg": [
-        "Узел: vTestPC003",
-        "Параметр: vm.unprivileged_userfaultfd",
-        "Доступен: True",
-        "Фактическое значение: 0",
-        "Требуемое значение: 0",
         "Соответствует: True",
         "Ошибка: нет"
     ]
