@@ -37,6 +37,6 @@
       ansible.builtin.file:
         path: "{{ item }}"
         state: file
-        mode: 'g-wx,o-rwx'
+        mode: 'u-s,g-s,o-t,g-wx,o-rwx'
         follow: false
       loop: "{{ log_files }}"
