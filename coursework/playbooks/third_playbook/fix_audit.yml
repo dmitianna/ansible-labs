@@ -28,11 +28,46 @@
         content: |
           -a always,exit -F path=/etc/passwd -F perm=wa -k coursework_identity
           -a always,exit -F path=/etc/shadow -F perm=wa -k coursework_identity
-      notify: Загрузка правил аудита
+      register: audit_rules_file
 
-  handlers:
-    - name: Загрузка правил аудита
+
+    - name: Получение действующих правил перед загрузкой
+      ansible.builtin.command:
+        argv:
+          - /usr/sbin/auditctl
+          - -l
+      register: audit_rules_before
+      changed_when: false
+      check_mode: false
+
+    - name: Загрузка правил при изменении файла или отклонении в ядре
       ansible.builtin.command:
         argv:
           - /sbin/augenrules
           - --load
+      when: >-
+        audit_rules_file.changed
+        or '-w /etc/passwd -p wa -k coursework_identity'
+            not in audit_rules_before.stdout_lines
+        or '-w /etc/shadow -p wa -k coursework_identity'
+            not in audit_rules_before.stdout_lines
+
+    - name: Получение действующих правил после исправления
+      ansible.builtin.command:
+        argv:
+          - /usr/sbin/auditctl
+          - -l
+      register: audit_rules_after
+      changed_when: false
+      check_mode: false
+
+    - name: Проверка применения правил аудита
+      ansible.builtin.assert:
+        that:
+          - "'-w /etc/passwd -p wa -k coursework_identity' in audit_rules_after.stdout_lines"
+          - "'-w /etc/shadow -p wa -k coursework_identity' in audit_rules_after.stdout_lines"
+        fail_msg: >-
+          Требуемые правила не загружены. Проверьте вывод augenrules
+          и наличие блокировки изменения правил аудита.
+        quiet: true
+      when: not ansible_check_mode
