@@ -22,6 +22,7 @@
       register: audit_status
       changed_when: false
       failed_when: false
+      check_mode: false
       when: auditctl_file.stat.exists
 
     - name: Проверка загруженных правил
@@ -32,6 +33,7 @@
       register: audit_rules
       changed_when: false
       failed_when: false
+      check_mode: false
       when: auditctl_file.stat.exists
 
     - name: Определение соответствия требованиям
