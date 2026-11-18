@@ -1,0 +1,459 @@
+
+PLAY [Исследование параметров защиты ядра Linux] *******************************
+
+TASK [Получение действующих значений параметров ядра] **************************
+ok: [vTestPC003] => (item=kernel.dmesg_restrict)
+ok: [vTestPC002] => (item=kernel.dmesg_restrict)
+ok: [vTestPC003] => (item=kernel.kptr_restrict)
+ok: [vTestPC003] => (item=vm.unprivileged_userfaultfd)
+ok: [vTestPC002] => (item=kernel.kptr_restrict)
+ok: [vTestPC003] => (item=kernel.randomize_va_space)
+ok: [vTestPC003] => (item=fs.protected_symlinks)
+ok: [vTestPC002] => (item=vm.unprivileged_userfaultfd)
+ok: [vTestPC003] => (item=fs.protected_hardlinks)
+ok: [vTestPC003] => (item=fs.suid_dumpable)
+ok: [vTestPC002] => (item=kernel.randomize_va_space)
+ok: [vTestPC002] => (item=fs.protected_symlinks)
+ok: [vTestPC002] => (item=fs.protected_hardlinks)
+ok: [vTestPC002] => (item=fs.suid_dumpable)
+
+TASK [Инициализация общего результата проверки ядра] ***************************
+ok: [vTestPC002]
+ok: [vTestPC003]
+
+TASK [Объединение результатов проверки параметров ядра] ************************
+ok: [vTestPC003] => (item=kernel.dmesg_restrict)
+ok: [vTestPC003] => (item=kernel.kptr_restrict)
+ok: [vTestPC003] => (item=vm.unprivileged_userfaultfd)
+ok: [vTestPC003] => (item=kernel.randomize_va_space)
+ok: [vTestPC003] => (item=fs.protected_symlinks)
+ok: [vTestPC002] => (item=kernel.dmesg_restrict)
+ok: [vTestPC003] => (item=fs.protected_hardlinks)
+ok: [vTestPC003] => (item=fs.suid_dumpable)
+ok: [vTestPC002] => (item=kernel.kptr_restrict)
+ok: [vTestPC002] => (item=vm.unprivileged_userfaultfd)
+ok: [vTestPC002] => (item=kernel.randomize_va_space)
+ok: [vTestPC002] => (item=fs.protected_symlinks)
+ok: [vTestPC002] => (item=fs.protected_hardlinks)
+ok: [vTestPC002] => (item=fs.suid_dumpable)
+
+TASK [Вывод результатов исследования] ******************************************
+ok: [vTestPC003] => (item=kernel.dmesg_restrict) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: kernel.dmesg_restrict",
+        "Доступен: True",
+        "Фактическое значение: 1",
+        "Требуемое значение: 1",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC003] => (item=kernel.kptr_restrict) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: kernel.kptr_restrict",
+        "Доступен: True",
+        "Фактическое значение: 1",
+        "Требуемое значение: 2",
+        "Соответствует: False",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC002] => (item=kernel.dmesg_restrict) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Параметр: kernel.dmesg_restrict",
+        "Доступен: True",
+        "Фактическое значение: 1",
+        "Требуемое значение: 1",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC002] => (item=kernel.kptr_restrict) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Параметр: kernel.kptr_restrict",
+        "Доступен: True",
+        "Фактическое значение: 1",
+        "Требуемое значение: 2",
+        "Соответствует: False",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC003] => (item=vm.unprivileged_userfaultfd) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: vm.unprivileged_userfaultfd",
+        "Доступен: True",
+        "Фактическое значение: 0",
+        "Требуемое значение: 0",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC002] => (item=vm.unprivileged_userfaultfd) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Параметр: vm.unprivileged_userfaultfd",
+        "Доступен: True",
+        "Фактическое значение: 0",
+        "Требуемое значение: 0",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC003] => (item=kernel.randomize_va_space) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: kernel.randomize_va_space",
+        "Доступен: True",
+        "Фактическое значение: 2",
+        "Требуемое значение: 2",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC002] => (item=kernel.randomize_va_space) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Параметр: kernel.randomize_va_space",
+        "Доступен: True",
+        "Фактическое значение: 2",
+        "Требуемое значение: 2",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC003] => (item=fs.protected_symlinks) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: fs.protected_symlinks",
+        "Доступен: True",
+        "Фактическое значение: 1",
+        "Требуемое значение: 1",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC002] => (item=fs.protected_symlinks) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Параметр: fs.protected_symlinks",
+        "Доступен: True",
+        "Фактическое значение: 1",
+        "Требуемое значение: 1",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC003] => (item=fs.protected_hardlinks) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: fs.protected_hardlinks",
+        "Доступен: True",
+        "Фактическое значение: 1",
+        "Требуемое значение: 1",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC002] => (item=fs.protected_hardlinks) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Параметр: fs.protected_hardlinks",
+        "Доступен: True",
+        "Фактическое значение: 1",
+        "Требуемое значение: 1",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC003] => (item=fs.suid_dumpable) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: fs.suid_dumpable",
+        "Доступен: True",
+        "Фактическое значение: 2",
+        "Требуемое значение: 0",
+        "Соответствует: False",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC002] => (item=fs.suid_dumpable) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Параметр: fs.suid_dumpable",
+        "Доступен: True",
+        "Фактическое значение: 2",
+        "Требуемое значение: 0",
+        "Соответствует: False",
+        "Ошибка: нет"
+    ]
+}
+
+PLAY [План исправления параметров ядра] ****************************************
+
+TASK [Сохранение исходного результата] *****************************************
+ok: [vTestPC002]
+ok: [vTestPC003]
+
+TASK [Вывод плана] *************************************************************
+ok: [vTestPC002] => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Проверка: НЕ СООТВЕТСТВУЕТ",
+        "Исправление требуется: ДА"
+    ]
+}
+ok: [vTestPC003] => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Проверка: НЕ СООТВЕТСТВУЕТ",
+        "Исправление требуется: ДА"
+    ]
+}
+
+PLAY [Исправление параметров защиты ядра Linux] ********************************
+
+TASK [Установка параметров защиты ядра] ****************************************
+changed: [vTestPC003] => (item=kernel.dmesg_restrict)
+changed: [vTestPC002] => (item=kernel.dmesg_restrict)
+changed: [vTestPC003] => (item=kernel.kptr_restrict)
+changed: [vTestPC003] => (item=vm.unprivileged_userfaultfd)
+changed: [vTestPC002] => (item=kernel.kptr_restrict)
+changed: [vTestPC003] => (item=kernel.randomize_va_space)
+changed: [vTestPC003] => (item=fs.protected_symlinks)
+changed: [vTestPC002] => (item=vm.unprivileged_userfaultfd)
+changed: [vTestPC003] => (item=fs.protected_hardlinks)
+changed: [vTestPC003] => (item=fs.suid_dumpable)
+changed: [vTestPC002] => (item=kernel.randomize_va_space)
+changed: [vTestPC002] => (item=fs.protected_symlinks)
+changed: [vTestPC002] => (item=fs.protected_hardlinks)
+changed: [vTestPC002] => (item=fs.suid_dumpable)
+
+PLAY [Исследование параметров защиты ядра Linux] *******************************
+
+TASK [Получение действующих значений параметров ядра] **************************
+ok: [vTestPC003] => (item=kernel.dmesg_restrict)
+ok: [vTestPC002] => (item=kernel.dmesg_restrict)
+ok: [vTestPC003] => (item=kernel.kptr_restrict)
+ok: [vTestPC003] => (item=vm.unprivileged_userfaultfd)
+ok: [vTestPC002] => (item=kernel.kptr_restrict)
+ok: [vTestPC003] => (item=kernel.randomize_va_space)
+ok: [vTestPC003] => (item=fs.protected_symlinks)
+ok: [vTestPC002] => (item=vm.unprivileged_userfaultfd)
+ok: [vTestPC003] => (item=fs.protected_hardlinks)
+ok: [vTestPC003] => (item=fs.suid_dumpable)
+ok: [vTestPC002] => (item=kernel.randomize_va_space)
+ok: [vTestPC002] => (item=fs.protected_symlinks)
+ok: [vTestPC002] => (item=fs.protected_hardlinks)
+ok: [vTestPC002] => (item=fs.suid_dumpable)
+
+TASK [Инициализация общего результата проверки ядра] ***************************
+ok: [vTestPC002]
+ok: [vTestPC003]
+
+TASK [Объединение результатов проверки параметров ядра] ************************
+ok: [vTestPC002] => (item=kernel.dmesg_restrict)
+ok: [vTestPC003] => (item=kernel.dmesg_restrict)
+ok: [vTestPC003] => (item=kernel.kptr_restrict)
+ok: [vTestPC002] => (item=kernel.kptr_restrict)
+ok: [vTestPC003] => (item=vm.unprivileged_userfaultfd)
+ok: [vTestPC003] => (item=kernel.randomize_va_space)
+ok: [vTestPC002] => (item=vm.unprivileged_userfaultfd)
+ok: [vTestPC003] => (item=fs.protected_symlinks)
+ok: [vTestPC003] => (item=fs.protected_hardlinks)
+ok: [vTestPC002] => (item=kernel.randomize_va_space)
+ok: [vTestPC003] => (item=fs.suid_dumpable)
+ok: [vTestPC002] => (item=fs.protected_symlinks)
+ok: [vTestPC002] => (item=fs.protected_hardlinks)
+ok: [vTestPC002] => (item=fs.suid_dumpable)
+
+TASK [Вывод результатов исследования] ******************************************
+ok: [vTestPC003] => (item=kernel.dmesg_restrict) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: kernel.dmesg_restrict",
+        "Доступен: True",
+        "Фактическое значение: 1",
+        "Требуемое значение: 1",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC003] => (item=kernel.kptr_restrict) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: kernel.kptr_restrict",
+        "Доступен: True",
+        "Фактическое значение: 2",
+        "Требуемое значение: 2",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC003] => (item=vm.unprivileged_userfaultfd) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: vm.unprivileged_userfaultfd",
+        "Доступен: True",
+        "Фактическое значение: 0",
+        "Требуемое значение: 0",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC002] => (item=kernel.dmesg_restrict) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Параметр: kernel.dmesg_restrict",
+        "Доступен: True",
+        "Фактическое значение: 1",
+        "Требуемое значение: 1",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC003] => (item=kernel.randomize_va_space) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: kernel.randomize_va_space",
+        "Доступен: True",
+        "Фактическое значение: 2",
+        "Требуемое значение: 2",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC003] => (item=fs.protected_symlinks) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: fs.protected_symlinks",
+        "Доступен: True",
+        "Фактическое значение: 1",
+        "Требуемое значение: 1",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC002] => (item=kernel.kptr_restrict) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Параметр: kernel.kptr_restrict",
+        "Доступен: True",
+        "Фактическое значение: 2",
+        "Требуемое значение: 2",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC003] => (item=fs.protected_hardlinks) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: fs.protected_hardlinks",
+        "Доступен: True",
+        "Фактическое значение: 1",
+        "Требуемое значение: 1",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC003] => (item=fs.suid_dumpable) => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Параметр: fs.suid_dumpable",
+        "Доступен: True",
+        "Фактическое значение: 0",
+        "Требуемое значение: 0",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC002] => (item=vm.unprivileged_userfaultfd) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Параметр: vm.unprivileged_userfaultfd",
+        "Доступен: True",
+        "Фактическое значение: 0",
+        "Требуемое значение: 0",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC002] => (item=kernel.randomize_va_space) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Параметр: kernel.randomize_va_space",
+        "Доступен: True",
+        "Фактическое значение: 2",
+        "Требуемое значение: 2",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC002] => (item=fs.protected_symlinks) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Параметр: fs.protected_symlinks",
+        "Доступен: True",
+        "Фактическое значение: 1",
+        "Требуемое значение: 1",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC002] => (item=fs.protected_hardlinks) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Параметр: fs.protected_hardlinks",
+        "Доступен: True",
+        "Фактическое значение: 1",
+        "Требуемое значение: 1",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+ok: [vTestPC002] => (item=fs.suid_dumpable) => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Параметр: fs.suid_dumpable",
+        "Доступен: True",
+        "Фактическое значение: 0",
+        "Требуемое значение: 0",
+        "Соответствует: True",
+        "Ошибка: нет"
+    ]
+}
+
+PLAY [Итог контроля параметров ядра] *******************************************
+
+TASK [Вывод итога по узлу] *****************************************************
+ok: [vTestPC002] => {
+    "msg": [
+        "Узел: vTestPC002",
+        "Категория: Параметры ядра",
+        "До: НЕ СООТВЕТСТВУЕТ",
+        "Исправление: ВЫПОЛНЕНО",
+        "Итог: СООТВЕТСТВУЕТ"
+    ]
+}
+ok: [vTestPC003] => {
+    "msg": [
+        "Узел: vTestPC003",
+        "Категория: Параметры ядра",
+        "До: НЕ СООТВЕТСТВУЕТ",
+        "Исправление: ВЫПОЛНЕНО",
+        "Итог: СООТВЕТСТВУЕТ"
+    ]
+}
+
+TASK [Подтверждение результата] ************************************************
+ok: [vTestPC002]
+ok: [vTestPC003]
+
+PLAY RECAP *********************************************************************
+vTestPC002                 : ok=13   changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+vTestPC003                 : ok=13   changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
