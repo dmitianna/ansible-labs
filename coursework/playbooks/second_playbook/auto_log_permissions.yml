@@ -1,0 +1,51 @@
+---
+- import_playbook: check_log_permissions.yml
+
+- name: План исправления прав журналов
+  hosts: department
+  gather_facts: false
+  tasks:
+    - name: Сохранение исходного результата
+      ansible.builtin.set_fact:
+        log_permissions_before: >-
+          {{ 'СООТВЕТСТВУЕТ' if (log_permissions_compliant | bool) else 'НЕ СООТВЕТСТВУЕТ' }}
+        log_permissions_needs_fix: >-
+          {{ not (log_permissions_compliant | bool) }}
+
+    - name: Вывод плана
+      ansible.builtin.debug:
+        msg:
+          - "Узел: {{ inventory_hostname }}"
+          - "Проверка: {{ log_permissions_before }}"
+          - "Исправление требуется: {{ 'ДА' if log_permissions_needs_fix else 'НЕТ' }}"
+
+- import_playbook: fix_log_permissions.yml
+  when:
+    - log_permissions_needs_fix | bool
+    - not ansible_check_mode
+
+- import_playbook: check_log_permissions.yml
+  when:
+    - log_permissions_needs_fix | bool
+    - not ansible_check_mode
+
+- name: Итог контроля прав журналов
+  hosts: department
+  gather_facts: false
+  tasks:
+    - name: Вывод итога по узлу
+      ansible.builtin.debug:
+        msg:
+          - "Узел: {{ inventory_hostname }}"
+          - "Категория: Права журналов"
+          - "До: {{ log_permissions_before }}"
+          - "Исправление: {{ 'НЕ ВЫПОЛНЯЛОСЬ (--check)' if ansible_check_mode else ('ВЫПОЛНЕНО' if log_permissions_needs_fix else 'НЕ ТРЕБОВАЛОСЬ') }}"
+          - "Итог: {{ 'СООТВЕТСТВУЕТ' if (log_permissions_compliant | bool) else 'НЕ СООТВЕТСТВУЕТ' }}"
+
+    - name: Подтверждение результата
+      ansible.builtin.assert:
+        that:
+          - log_permissions_compliant | bool
+        fail_msg: Соответствие не подтверждено. Проверьте результаты выше.
+        quiet: true
+      when: not ansible_check_mode
