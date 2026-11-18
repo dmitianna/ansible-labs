@@ -58,6 +58,23 @@
                 in (audit_rules.stdout_lines | default([]))
           }}
 
+    - name: Общий результат проверки аудита
+      ansible.builtin.set_fact:
+        audit_compliant: >-
+          {{
+            (audit_service_ok | bool)
+            and (audit_kernel_ok | bool)
+            and (audit_rules_ok | bool)
+          }}
+        audit_check_error: >-
+          {{
+            (auditctl_file.stat.exists | bool)
+            and (
+              ((audit_status.rc | default(1)) != 0)
+              or ((audit_rules.rc | default(1)) != 0)
+            )
+          }}
+
     - name: Вывод результатов контроля
       ansible.builtin.debug:
         msg:

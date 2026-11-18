@@ -19,6 +19,24 @@
         state: started
         enabled: true
 
+    - name: Получение состояния аудита ядра
+      ansible.builtin.command:
+        argv:
+          - /usr/sbin/auditctl
+          - -s
+      register: audit_kernel_before
+      changed_when: false
+      check_mode: false
+
+    - name: Включение отключённого аудита ядра
+      ansible.builtin.command:
+        argv:
+          - /usr/sbin/auditctl
+          - -e
+          - '1'
+      when: "'enabled 0' in audit_kernel_before.stdout_lines"
+
+
     - name: Настройка правил аудита учётных записей
       ansible.builtin.copy:
         dest: /etc/audit/rules.d/90-coursework.rules
@@ -69,5 +87,25 @@
         fail_msg: >-
           Требуемые правила не загружены. Проверьте вывод augenrules
           и наличие блокировки изменения правил аудита.
+        quiet: true
+      when: not ansible_check_mode
+
+    - name: Получение состояния аудита ядра после исправления
+      ansible.builtin.command:
+        argv:
+          - /usr/sbin/auditctl
+          - -s
+      register: audit_kernel_after
+      changed_when: false
+      check_mode: false
+
+    - name: Проверка включения аудита ядра
+      ansible.builtin.assert:
+        that:
+          - >-
+            'enabled 1' in audit_kernel_after.stdout_lines
+            or 'enabled 2' in audit_kernel_after.stdout_lines
+        success_msg: Аудит ядра включён
+        fail_msg: Аудит ядра остался отключённым после исправления
         quiet: true
       when: not ansible_check_mode

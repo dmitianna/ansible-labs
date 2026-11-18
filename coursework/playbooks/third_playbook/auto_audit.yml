@@ -1,0 +1,56 @@
+---
+- import_playbook: check_audit.yml
+
+- name: План исправления подсистемы аудита
+  hosts: department
+  gather_facts: false
+  tasks:
+    - name: Сохранение исходного результата
+      ansible.builtin.set_fact:
+        audit_before: >-
+          {{
+            'ОШИБКА ПРОВЕРКИ' if (audit_check_error | bool)
+            else ('СООТВЕТСТВУЕТ' if (audit_compliant | bool)
+            else 'НЕ СООТВЕТСТВУЕТ')
+          }}
+        audit_needs_fix: >-
+          {{ not (audit_compliant | bool) and not (audit_check_error | bool) }}
+
+    - name: Вывод плана
+      ansible.builtin.debug:
+        msg:
+          - "Узел: {{ inventory_hostname }}"
+          - "Проверка: {{ audit_before }}"
+          - "Исправление требуется: {{ 'ДА' if audit_needs_fix else 'НЕТ' }}"
+
+- import_playbook: fix_audit.yml
+  when:
+    - audit_needs_fix | bool
+    - not ansible_check_mode
+
+- import_playbook: check_audit.yml
+  when:
+    - audit_needs_fix | bool
+    - not ansible_check_mode
+
+- name: Итог контроля подсистемы аудита
+  hosts: department
+  gather_facts: false
+  tasks:
+    - name: Вывод итога по узлу
+      ansible.builtin.debug:
+        msg:
+          - "Узел: {{ inventory_hostname }}"
+          - "Категория: Подсистема аудита"
+          - "До: {{ audit_before }}"
+          - "Исправление: {{ 'НЕ ВЫПОЛНЯЛОСЬ (--check)' if ansible_check_mode else ('НЕ ЗАПУСКАЛОСЬ: ОШИБКА ПРОВЕРКИ' if audit_before == 'ОШИБКА ПРОВЕРКИ' else ('ВЫПОЛНЕНО' if audit_needs_fix else 'НЕ ТРЕБОВАЛОСЬ')) }}"
+          - "Итог: {{ 'ОШИБКА ПРОВЕРКИ' if (audit_check_error | bool) else ('СООТВЕТСТВУЕТ' if (audit_compliant | bool) else 'НЕ СООТВЕТСТВУЕТ') }}"
+
+    - name: Подтверждение результата
+      ansible.builtin.assert:
+        that:
+          - not (audit_check_error | bool)
+          - audit_compliant | bool
+        fail_msg: Соответствие не подтверждено. Проверьте результаты выше.
+        quiet: true
+      when: (audit_check_error | bool) or not ansible_check_mode

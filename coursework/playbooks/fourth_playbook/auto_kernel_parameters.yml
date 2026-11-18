@@ -1,0 +1,56 @@
+---
+- import_playbook: check_kernel_parameters.yml
+
+- name: План исправления параметров ядра
+  hosts: department
+  gather_facts: false
+  tasks:
+    - name: Сохранение исходного результата
+      ansible.builtin.set_fact:
+        kernel_parameters_before: >-
+          {{
+            'ОШИБКА ПРОВЕРКИ' if (kernel_check_error | bool)
+            else ('СООТВЕТСТВУЕТ' if (kernel_compliant | bool)
+            else 'НЕ СООТВЕТСТВУЕТ')
+          }}
+        kernel_parameters_needs_fix: >-
+          {{ not (kernel_compliant | bool) and not (kernel_check_error | bool) }}
+
+    - name: Вывод плана
+      ansible.builtin.debug:
+        msg:
+          - "Узел: {{ inventory_hostname }}"
+          - "Проверка: {{ kernel_parameters_before }}"
+          - "Исправление требуется: {{ 'ДА' if kernel_parameters_needs_fix else 'НЕТ' }}"
+
+- import_playbook: fix_kernel_parameters.yml
+  when:
+    - kernel_parameters_needs_fix | bool
+    - not ansible_check_mode
+
+- import_playbook: check_kernel_parameters.yml
+  when:
+    - kernel_parameters_needs_fix | bool
+    - not ansible_check_mode
+
+- name: Итог контроля параметров ядра
+  hosts: department
+  gather_facts: false
+  tasks:
+    - name: Вывод итога по узлу
+      ansible.builtin.debug:
+        msg:
+          - "Узел: {{ inventory_hostname }}"
+          - "Категория: Параметры ядра"
+          - "До: {{ kernel_parameters_before }}"
+          - "Исправление: {{ 'НЕ ВЫПОЛНЯЛОСЬ (--check)' if ansible_check_mode else ('НЕ ЗАПУСКАЛОСЬ: ОШИБКА ПРОВЕРКИ' if kernel_parameters_before == 'ОШИБКА ПРОВЕРКИ' else ('ВЫПОЛНЕНО' if kernel_parameters_needs_fix else 'НЕ ТРЕБОВАЛОСЬ')) }}"
+          - "Итог: {{ 'ОШИБКА ПРОВЕРКИ' if (kernel_check_error | bool) else ('СООТВЕТСТВУЕТ' if (kernel_compliant | bool) else 'НЕ СООТВЕТСТВУЕТ') }}"
+
+    - name: Подтверждение результата
+      ansible.builtin.assert:
+        that:
+          - not (kernel_check_error | bool)
+          - kernel_compliant | bool
+        fail_msg: Соответствие не подтверждено. Проверьте результаты выше.
+        quiet: true
+      when: (kernel_check_error | bool) or not ansible_check_mode
